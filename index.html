@@ -1,0 +1,1663 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+<meta name="theme-color" content="#6C5CE7" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Y♥E Calc" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="description" content="Y♥E Calculator — حاسبة شاملة تعمل أوفلاين" />
+<link rel="manifest" href="manifest.json" />
+<link rel="apple-touch-icon" href="icon-192.png" />
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png" />
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png" />
+<title>Y♥E Calculator</title>
+<style>
+:root{
+  --bg:#F5F7FA;
+  --surface:rgba(255,255,255,0.82);
+  --surface2:rgba(238,241,246,0.75);
+  --surface-solid:#FFFFFF;
+  --primary:#6C5CE7;
+  --primary-soft:rgba(234,230,255,0.88);
+  --primary-deep:#5B4BD6;
+  --secondary:#00B894;
+  --accent:#FF6B9D;
+  --text:#1F2937;
+  --muted:#6B7280;
+  --danger:#E74C3C;
+  --border:rgba(225,229,236,0.5);
+  --overlay:rgba(245,247,250,0.55);
+  --header-bg:rgba(255,255,255,0.72);
+  --nav-bg:rgba(255,255,255,0.78);
+  --num-bg:rgba(255,255,255,0.9);
+  --num-shadow:0 2px 6px rgba(31,41,55,.06), 0 1px 2px rgba(31,41,55,.04);
+  --op-bg:rgba(255,255,255,0.85);
+  --eq-shadow:0 6px 18px rgba(108,92,231,.45);
+  --trig-bg:rgba(232,237,255,0.9);
+  --trig-color:#5B6EE0;
+  --hyper-bg:rgba(255,236,247,0.9);
+  --hyper-color:#D6488F;
+  --log-bg:rgba(232,250,244,0.9);
+  --log-color:#0EA37A;
+  --power-bg:rgba(255,244,230,0.9);
+  --power-color:#E67E22;
+}
+body.dark{
+  --bg:#0F1117;
+  --surface:rgba(24,27,36,0.78);
+  --surface2:rgba(31,35,48,0.72);
+  --surface-solid:#181B24;
+  --primary:#8B7CFF;
+  --primary-soft:rgba(42,37,69,0.85);
+  --primary-deep:#7A6AE8;
+  --secondary:#20C997;
+  --accent:#FF7FB0;
+  --text:#F8FAFC;
+  --muted:#94A3B8;
+  --danger:#FF6B6B;
+  --border:rgba(35,40,56,0.6);
+  --overlay:rgba(15,17,23,0.7);
+  --header-bg:rgba(24,27,36,0.78);
+  --nav-bg:rgba(24,27,36,0.85);
+  --num-bg:rgba(38,42,56,0.85);
+  --num-shadow:0 2px 6px rgba(0,0,0,.35), 0 1px 2px rgba(0,0,0,.2);
+  --eq-shadow:0 6px 18px rgba(139,124,255,.5);
+  --trig-bg:rgba(52,55,90,0.85);
+  --trig-color:#8DA2FF;
+  --hyper-bg:rgba(70,42,60,0.85);
+  --hyper-color:#FF8FBE;
+  --log-bg:rgba(35,62,55,0.85);
+  --log-color:#4FE0B0;
+  --power-bg:rgba(62,48,32,0.85);
+  --power-color:#FFB566;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;font-family:-apple-system,"Segoe UI",Tahoma,system-ui,sans-serif;color:var(--text);overflow:hidden;transition:color .3s;overscroll-behavior:none;background:#0F1117}
+
+body::before{
+  content:"";
+  position:fixed;inset:0;
+  background-image:url('background.jpg');
+  background-size:cover;
+  background-position:center center;
+  background-repeat:no-repeat;
+  z-index:-2;
+  transition:filter .4s ease;
+}
+body::after{
+  content:"";
+  position:fixed;inset:0;
+  background:var(--overlay);
+  backdrop-filter:blur(2px);
+  -webkit-backdrop-filter:blur(2px);
+  z-index:-1;
+  transition:background .4s ease;
+}
+.hidden{display:none!important}
+
+/* ============================================================
+   SPLASH — تصميم فخم جديد
+   ============================================================ */
+.splash{
+  position:fixed;inset:0;z-index:1000;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#1a1440 0%,#2d1b69 50%,#0d4a3d 100%);
+  animation:splashOut .8s cubic-bezier(.6,0,.4,1) 2.4s forwards;
+  overflow:hidden;
+}
+
+/* الطبقات المتحركة في الخلفية */
+.splash-glow-1{
+  position:absolute;top:-30%;left:-30%;
+  width:160%;height:160%;
+  background:radial-gradient(circle at 30% 30%, rgba(108,92,231,.55) 0%, transparent 45%);
+  animation:float1 8s ease-in-out infinite;
+}
+.splash-glow-2{
+  position:absolute;bottom:-30%;right:-30%;
+  width:160%;height:160%;
+  background:radial-gradient(circle at 70% 70%, rgba(0,184,148,.45) 0%, transparent 50%);
+  animation:float2 10s ease-in-out infinite;
+}
+.splash-glow-3{
+  position:absolute;top:50%;left:50%;
+  width:100%;height:100%;
+  transform:translate(-50%,-50%);
+  background:radial-gradient(circle, rgba(255,107,157,.2) 0%, transparent 60%);
+  animation:pulse 4s ease-in-out infinite;
+}
+@keyframes float1{
+  0%,100%{transform:translate(0,0) scale(1)}
+  50%{transform:translate(8%,5%) scale(1.08)}
+}
+@keyframes float2{
+  0%,100%{transform:translate(0,0) scale(1)}
+  50%{transform:translate(-8%,-5%) scale(1.1)}
+}
+@keyframes pulse{
+  0%,100%{opacity:.5;transform:translate(-50%,-50%) scale(1)}
+  50%{opacity:.9;transform:translate(-50%,-50%) scale(1.15)}
+}
+
+/* الجسيمات العائمة */
+.splash-particles{
+  position:absolute;inset:0;overflow:hidden;z-index:1;
+}
+.splash-particles span{
+  position:absolute;
+  width:4px;height:4px;
+  border-radius:50%;
+  background:rgba(255,255,255,.6);
+  animation:rise linear infinite;
+}
+.splash-particles span:nth-child(1){left:10%;bottom:-10px;animation-duration:7s;animation-delay:0s;background:rgba(255,107,157,.7)}
+.splash-particles span:nth-child(2){left:25%;bottom:-10px;animation-duration:9s;animation-delay:1s}
+.splash-particles span:nth-child(3){left:42%;bottom:-10px;animation-duration:6s;animation-delay:2s;background:rgba(0,184,148,.7)}
+.splash-particles span:nth-child(4){left:58%;bottom:-10px;animation-duration:8s;animation-delay:.5s}
+.splash-particles span:nth-child(5){left:73%;bottom:-10px;animation-duration:7.5s;animation-delay:1.5s;background:rgba(255,107,157,.7)}
+.splash-particles span:nth-child(6){left:88%;bottom:-10px;animation-duration:10s;animation-delay:2.5s}
+.splash-particles span:nth-child(7){left:35%;bottom:-10px;animation-duration:9.5s;animation-delay:3s;background:rgba(0,184,148,.5)}
+.splash-particles span:nth-child(8){left:65%;bottom:-10px;animation-duration:6.5s;animation-delay:1.8s}
+@keyframes rise{
+  from{transform:translateY(0);opacity:0}
+  10%{opacity:.9}
+  90%{opacity:.9}
+  to{transform:translateY(-100vh);opacity:0}
+}
+
+/* المحتوى الرئيسي */
+.splash-content{
+  position:relative;z-index:3;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:20px;
+}
+
+/* الأيقونة في المنتصف */
+.splash-icon-wrap{
+  position:relative;
+  width:150px;height:150px;
+  margin-bottom:32px;
+  animation:iconAppear 1s cubic-bezier(.34,1.56,.64,1);
+}
+.splash-icon-bg{
+  position:absolute;inset:0;
+  border-radius:42px;
+  background:linear-gradient(135deg, #6C5CE7, #8B5CF6, #00B894);
+  box-shadow:
+    0 24px 60px rgba(108,92,231,.5),
+    0 12px 30px rgba(0,184,148,.35),
+    inset 0 2px 0 rgba(255,255,255,.3);
+  animation:iconRotate 6s ease-in-out infinite;
+}
+.splash-icon-glow{
+  position:absolute;inset:-20px;
+  border-radius:60px;
+  background:radial-gradient(circle, rgba(108,92,231,.5) 0%, transparent 70%);
+  animation:glowPulse 3s ease-in-out infinite;
+  z-index:-1;
+}
+.splash-icon-inner{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  font-family:-apple-system,"Segoe UI",Arial,sans-serif;
+  font-size:82px;font-weight:900;
+  color:#fff;
+  text-shadow:0 4px 20px rgba(0,0,0,.3);
+  letter-spacing:2px;
+}
+.splash-icon-inner .heart{
+  color:#FF6B9D;
+  font-size:68px;
+  text-shadow:0 0 24px rgba(255,107,157,.9), 0 4px 20px rgba(0,0,0,.35);
+  animation:heartBeat 1.5s ease-in-out infinite;
+  display:inline-block;
+}
+@keyframes iconAppear{
+  0%{transform:scale(.3) rotate(-15deg);opacity:0}
+  60%{transform:scale(1.08) rotate(3deg)}
+  100%{transform:scale(1) rotate(0deg);opacity:1}
+}
+@keyframes iconRotate{
+  0%,100%{transform:rotate(0deg)}
+  25%{transform:rotate(-2deg)}
+  75%{transform:rotate(2deg)}
+}
+@keyframes glowPulse{
+  0%,100%{transform:scale(1);opacity:.6}
+  50%{transform:scale(1.15);opacity:1}
+}
+@keyframes heartBeat{
+  0%,100%{transform:scale(1)}
+  20%{transform:scale(1.15)}
+  40%{transform:scale(1)}
+  60%{transform:scale(1.1)}
+  80%{transform:scale(1)}
+}
+
+/* اسم التطبيق */
+.splash-title{
+  font-size:32px;
+  font-weight:900;
+  color:#fff;
+  letter-spacing:4px;
+  text-shadow:0 4px 20px rgba(0,0,0,.4);
+  opacity:0;
+  animation:fadeUp .7s ease .6s forwards;
+  margin-bottom:8px;
+}
+.splash-subtitle{
+  font-size:12px;
+  color:rgba(255,255,255,.7);
+  letter-spacing:8px;
+  text-transform:uppercase;
+  font-weight:600;
+  opacity:0;
+  animation:fadeUp .7s ease .9s forwards;
+}
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(15px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* Loading bar */
+.splash-loader{
+  position:absolute;bottom:80px;
+  width:120px;height:3px;
+  background:rgba(255,255,255,.15);
+  border-radius:3px;
+  overflow:hidden;
+  opacity:0;
+  animation:fade 0.5s ease 1.2s forwards;
+}
+.splash-loader::after{
+  content:"";
+  position:absolute;top:0;left:-40%;
+  width:40%;height:100%;
+  background:linear-gradient(90deg, transparent, #fff, transparent);
+  border-radius:3px;
+  animation:loadSlide 1.6s ease-in-out infinite;
+}
+@keyframes loadSlide{
+  0%{left:-40%}
+  100%{left:100%}
+}
+@keyframes fade{to{opacity:1}}
+
+/* شعار Y♥E في الأسفل */
+.splash-footer{
+  position:absolute;bottom:32px;
+  font-size:11px;
+  color:rgba(255,255,255,.5);
+  letter-spacing:2px;
+  font-weight:600;
+  opacity:0;
+  animation:fade 0.6s ease 1.5s forwards;
+}
+.splash-footer b{color:#FF6B9D}
+
+@keyframes splashOut{
+  0%{opacity:1;transform:scale(1)}
+  100%{opacity:0;transform:scale(1.08);visibility:hidden}
+}
+
+/* ============================================================
+   App Shell
+   ============================================================ */
+.app{height:100vh;height:100dvh;display:flex;flex-direction:column}
+.header{display:flex;justify-content:space-between;align-items:center;padding:8px 14px;background:var(--header-bg);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--border);flex-shrink:0;padding-top:calc(8px + env(safe-area-inset-top))}
+.brand{font-weight:800;font-size:20px;letter-spacing:1px;cursor:pointer;display:flex;align-items:center;gap:1px;font-family:-apple-system,"Segoe UI",Arial,sans-serif}
+.brand .y{color:var(--primary)}
+.brand .h{color:var(--accent)}
+.brand .e{color:var(--secondary)}
+.badges{display:flex;gap:6px;align-items:center}
+.badge{font-size:11px;font-weight:700;background:var(--primary-soft);color:var(--primary);padding:5px 10px;border-radius:20px;cursor:pointer;border:none;font-family:inherit;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);transition:transform .1s}
+.badge:active{transform:scale(.94)}
+.badge.on{background:var(--primary);color:#fff}
+
+.screen-container{flex:1;overflow:hidden;position:relative}
+.screen{position:absolute;inset:0;display:none;flex-direction:column;padding:10px 12px 6px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.screen.active{display:flex}
+
+/* ============================================================
+   Display
+   ============================================================ */
+.display{background:var(--surface);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:24px;padding:16px 18px;margin-bottom:12px;min-height:104px;display:flex;flex-direction:column;justify-content:flex-end;box-shadow:0 8px 28px rgba(0,0,0,.1), inset 0 1px 0 rgba(255,255,255,.4);flex-shrink:0;position:relative;overflow:hidden}
+.display::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(108,92,231,.4),transparent)}
+.expression{color:var(--muted);font-size:14px;overflow-x:auto;white-space:nowrap;direction:ltr;text-align:right;min-height:18px;scrollbar-width:none;font-family:ui-monospace,"SF Mono",Menlo,monospace;letter-spacing:.3px}
+.expression::-webkit-scrollbar,.result::-webkit-scrollbar{display:none}
+.result{font-size:34px;font-weight:800;direction:ltr;text-align:right;overflow-x:auto;white-space:nowrap;margin-top:6px;scrollbar-width:none;font-family:ui-monospace,"SF Mono",Menlo,monospace;letter-spacing:-.5px;color:var(--text)}
+.result.error{color:var(--danger);font-size:15px;font-weight:600;letter-spacing:0}
+
+/* ============================================================
+   أزرار أساسية
+   ============================================================ */
+.pad{flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:10px;direction:ltr;padding:4px 2px}
+
+.btn{position:relative;border:none;border-radius:50px;background:var(--num-bg);color:var(--text);font-size:22px;font-weight:700;cursor:pointer;transition:transform .08s ease, box-shadow .15s ease, background .15s ease, color .15s ease;user-select:none;min-height:54px;font-family:inherit;touch-action:manipulation;direction:ltr;box-shadow:var(--num-shadow);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);overflow:hidden;display:flex;align-items:center;justify-content:center}
+.btn:active{transform:scale(.93);box-shadow:0 1px 3px rgba(0,0,0,.08);background:var(--surface2)}
+
+.btn.op{color:#fff;background:linear-gradient(135deg, var(--primary), var(--primary-deep));box-shadow:0 4px 14px rgba(108,92,231,.35);font-size:24px;font-weight:700}
+.btn.op:active{background:linear-gradient(135deg, var(--primary-deep), var(--primary));box-shadow:0 2px 6px rgba(108,92,231,.4)}
+
+.btn.fn{color:var(--primary);background:var(--primary-soft);font-size:16px;font-weight:700;box-shadow:0 2px 6px rgba(108,92,231,.15)}
+.btn.fn:active{background:rgba(108,92,231,.25)}
+
+.btn.eq{background:linear-gradient(135deg, var(--primary), #8B5CF6);color:#fff;font-size:26px;font-weight:800;box-shadow:var(--eq-shadow);grid-column:span 2;border-radius:50px}
+.btn.eq:active{background:linear-gradient(135deg, var(--primary-deep), #7A4FE0);box-shadow:0 3px 10px rgba(108,92,231,.5)}
+
+.btn.ac{color:var(--danger);background:rgba(231,76,60,.12);font-weight:800}
+.btn.ac:active{background:rgba(231,76,60,.2)}
+
+/* ============================================================
+   SCIENTIFIC — تصميم جديد منظم
+   ============================================================ */
+.sci-wrap{
+  display:flex;flex-direction:column;gap:10px;
+  flex:1;overflow:hidden;
+}
+
+/* شريط تبويبات الفئات */
+.sci-tabs{
+  display:flex;gap:6px;
+  background:var(--surface);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:4px;
+  flex-shrink:0;
+  box-shadow:0 2px 10px rgba(0,0,0,.05);
+}
+.sci-tab{
+  flex:1;padding:8px 4px;
+  border:none;background:transparent;
+  color:var(--muted);
+  font-size:11px;font-weight:700;
+  border-radius:12px;
+  cursor:pointer;font-family:inherit;
+  transition:all .2s;
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+}
+.sci-tab .tab-ic{font-size:16px;line-height:1}
+.sci-tab.active{
+  background:linear-gradient(135deg, var(--primary), var(--primary-deep));
+  color:#fff;
+  box-shadow:0 3px 10px rgba(108,92,231,.4);
+}
+.sci-tab:active{transform:scale(.96)}
+
+/* لوحة الدوال */
+.sci-panel{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  padding:12px;
+  background:var(--surface);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  border:1px solid var(--border);
+  border-radius:18px;
+  box-shadow:0 4px 16px rgba(0,0,0,.06);
+  flex-shrink:0;
+  animation:panelIn .25s ease;
+}
+@keyframes panelIn{
+  from{opacity:0;transform:translateY(-6px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+.sci-btn{
+  position:relative;
+  padding:12px 4px;
+  border:none;
+  border-radius:14px;
+  font-family:inherit;
+  font-size:14px;
+  font-weight:700;
+  cursor:pointer;
+  transition:transform .08s, background .15s;
+  min-height:52px;
+  display:flex;align-items:center;justify-content:center;
+  direction:ltr;
+  color:var(--text);
+  background:var(--surface2);
+  border:1px solid var(--border);
+  box-shadow:0 1px 3px rgba(0,0,0,.04);
+}
+.sci-btn:active{transform:scale(.92);background:var(--surface)}
+
+.sci-btn.trig{background:var(--trig-bg);color:var(--trig-color);border-color:transparent}
+.sci-btn.hyper{background:var(--hyper-bg);color:var(--hyper-color);border-color:transparent}
+.sci-btn.log{background:var(--log-bg);color:var(--log-color);border-color:transparent}
+.sci-btn.power{background:var(--power-bg);color:var(--power-color);border-color:transparent}
+.sci-btn.special{
+  background:linear-gradient(135deg, var(--primary), var(--primary-deep));
+  color:#fff;border-color:transparent;
+  box-shadow:0 4px 14px rgba(108,92,231,.4);
+}
+.sci-btn.special:active{
+  background:linear-gradient(135deg, var(--primary-deep), var(--primary));
+}
+.sci-btn.ac-btn{
+  background:rgba(231,76,60,.15);
+  color:var(--danger);
+  border-color:rgba(231,76,60,.3);
+  font-weight:800;
+}
+.sci-btn.back-btn{
+  background:rgba(255,193,7,.15);
+  color:#E67E22;
+  border-color:rgba(255,193,7,.3);
+}
+
+/* لوحة الأرقام العلمية */
+.sci-nums{
+  flex:1;
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:8px;
+  direction:ltr;
+  padding:2px;
+  min-height:0;
+}
+.sci-nums .btn{
+  min-height:0;
+  height:100%;
+  font-size:20px;
+  font-weight:700;
+  border-radius:18px;
+}
+.sci-nums .btn.op{font-size:22px}
+.sci-nums .btn.fn{
+  font-size:13px;
+  font-weight:800;
+  background:linear-gradient(135deg, var(--primary), var(--primary-deep));
+  color:#fff;
+  box-shadow:0 3px 10px rgba(108,92,231,.35);
+}
+.sci-nums .btn.eq{
+  font-size:20px;
+  grid-column:auto;
+  border-radius:18px;
+}
+
+/* ============================================================
+   Cards / Tools
+   ============================================================ */
+.section-title{font-size:15px;font-weight:700;margin-bottom:10px;color:var(--text);display:flex;align-items:center;gap:6px}
+.tools-list{display:flex;flex-direction:column;gap:10px;padding-bottom:20px}
+.tool-card{background:var(--surface);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--border);border-radius:18px;padding:12px;box-shadow:0 4px 16px rgba(0,0,0,.06)}
+.tool-card h3{font-size:13px;color:var(--primary);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;font-weight:700}
+.tool-card h3 span{color:var(--muted);font-weight:400;font-size:11px;font-family:monospace}
+.tool-card .row{display:flex;gap:6px;margin-bottom:8px;align-items:center}
+.tool-card input{flex:1;padding:10px 12px;border-radius:12px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:14px;min-width:0;font-family:inherit;transition:border .2s}
+.tool-card input:focus{outline:none;border-color:var(--primary)}
+.tool-card .actions{display:flex;gap:8px;margin-top:10px}
+.tool-card button{flex:1;padding:10px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--primary),var(--primary-deep));color:#fff;font-weight:700;cursor:pointer;font-size:13px;font-family:inherit;transition:transform .08s;box-shadow:0 3px 10px rgba(108,92,231,.3)}
+.tool-card button:active{transform:scale(.97)}
+.tool-card button.reset{background:var(--surface2);color:var(--text);box-shadow:none;border:1px solid var(--border)}
+.tool-result{margin-top:10px;padding:10px;border-radius:12px;background:var(--primary-soft);color:var(--primary);font-weight:700;text-align:center;font-size:14px;direction:ltr;font-family:monospace;display:none}
+
+/* ============================================================
+   Converter
+   ============================================================ */
+.conv-form{display:flex;flex-direction:column;gap:8px;padding-bottom:20px}
+.conv-form label{font-size:12px;color:var(--text);margin-top:6px;font-weight:700;padding-right:4px}
+.conv-form select,.conv-form input{padding:12px 14px;border-radius:14px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:15px;font-family:inherit;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);transition:border .2s;width:100%}
+.conv-form select:focus,.conv-form input:focus{outline:none;border-color:var(--primary)}
+.conv-result{margin-top:12px;padding:18px;border-radius:18px;background:var(--primary-soft);color:var(--primary);font-size:22px;font-weight:800;text-align:center;direction:ltr;font-family:monospace;word-break:break-all;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--border);box-shadow:0 4px 16px rgba(108,92,231,.15)}
+
+/* ============================================================
+   History
+   ============================================================ */
+.hist-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.btn-clear-hist{background:rgba(231,76,60,.12);border:1px solid var(--danger);color:var(--danger);padding:6px 12px;border-radius:20px;font-size:12px;cursor:pointer;font-family:inherit;font-weight:700;transition:transform .1s}
+.btn-clear-hist:active{transform:scale(.95)}
+.history-list{display:flex;flex-direction:column;gap:8px;padding-bottom:20px}
+.history-item{background:var(--surface);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:14px;padding:10px 12px;cursor:pointer;transition:transform .1s, background .15s;box-shadow:0 2px 10px rgba(0,0,0,.05);position:relative}
+.history-item:active{transform:scale(.98);background:var(--surface2)}
+.history-item .hi-expr{color:var(--muted);font-size:12px;direction:ltr;text-align:right;font-family:monospace}
+.history-item .hi-res{color:var(--text);font-size:17px;font-weight:800;direction:ltr;text-align:right;margin-top:3px;font-family:monospace}
+.history-item .del{position:absolute;left:8px;top:8px;background:transparent;border:none;color:var(--muted);font-size:14px;cursor:pointer;padding:4px 8px;border-radius:50%;transition:background .15s}
+.history-item .del:active{background:rgba(231,76,60,.15);color:var(--danger)}
+.empty-msg{text-align:center;color:var(--muted);padding:50px 20px;font-size:14px;background:var(--surface);backdrop-filter:blur(12px);border-radius:18px;border:1px solid var(--border);font-weight:600}
+
+/* ============================================================
+   Settings
+   ============================================================ */
+.settings-group{background:var(--surface);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--border);border-radius:18px;padding:4px 0;margin-bottom:12px;box-shadow:0 4px 16px rgba(0,0,0,.06);overflow:hidden}
+.setting-row{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--border);font-size:14px;font-weight:600}
+.setting-row:last-child{border-bottom:none}
+.setting-row select{padding:6px 10px;border-radius:10px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-family:inherit;font-size:13px;font-weight:600}
+.switch{position:relative;display:inline-block;width:46px;height:26px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:var(--surface2);border-radius:26px;transition:.25s;cursor:pointer;border:1px solid var(--border)}
+.slider:before{content:"";position:absolute;height:20px;width:20px;right:3px;top:2px;background:#fff;border-radius:50%;transition:.25s;box-shadow:0 2px 4px rgba(0,0,0,.2)}
+.switch input:checked+.slider{background:linear-gradient(135deg,var(--primary),var(--primary-deep));border-color:transparent}
+.switch input:checked+.slider:before{transform:translateX(-20px)}
+.about{text-align:center;padding:20px 0;background:var(--surface);backdrop-filter:blur(12px);border-radius:18px;border:1px solid var(--border);margin-top:12px;box-shadow:0 4px 16px rgba(0,0,0,.06)}
+.about-logo{width:80px;height:80px;margin:0 auto 12px;display:block;border-radius:20px;box-shadow:0 8px 24px rgba(108,92,231,.35)}
+.about p{font-size:13px;color:var(--text);margin:3px 0;font-weight:700}
+.about .muted{font-size:11px;color:var(--muted);font-weight:400;margin-top:6px}
+.about .sw{font-size:22px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:2px;margin-top:10px;font-family:-apple-system,"Segoe UI",Arial,sans-serif}
+.about .sw .y{color:var(--primary)}
+.about .sw .h{color:var(--accent)}
+.about .sw .e{color:var(--secondary)}
+.install-btn{display:block;width:100%;padding:12px;margin-top:12px;border-radius:14px;border:none;background:linear-gradient(135deg,var(--primary),var(--primary-deep));color:#fff;font-weight:700;font-size:14px;font-family:inherit;cursor:pointer;box-shadow:0 4px 14px rgba(108,92,231,.4)}
+.install-btn:active{transform:scale(.98)}
+
+/* ============================================================
+   Bottom Nav
+   ============================================================ */
+.bottom-nav{display:flex;background:var(--nav-bg);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1px solid var(--border);padding:6px 2px calc(6px + env(safe-area-inset-bottom));flex-shrink:0}
+.nav-btn{flex:1;background:transparent;border:none;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 1px;cursor:pointer;color:var(--muted);font-size:9px;font-weight:700;transition:color .2s,transform .1s;border-radius:12px;font-family:inherit}
+.nav-btn .ic{font-size:17px;line-height:1}
+.nav-btn.active{color:var(--primary);background:var(--primary-soft)}
+.nav-btn:active{transform:scale(.92)}
+
+/* ============================================================
+   Toast / Install / Offline
+   ============================================================ */
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--danger);color:#fff;padding:12px 18px;border-radius:14px;font-size:13px;font-weight:700;z-index:200;box-shadow:0 8px 24px rgba(231,76,60,.5);animation:toastIn .3s ease;max-width:90%;text-align:center;font-family:inherit}
+@keyframes toastIn{from{opacity:0;transform:translate(-50%,10px)}to{opacity:1;transform:translate(-50%,0)}}
+
+.install-banner{position:fixed;bottom:76px;left:12px;right:12px;background:linear-gradient(135deg,var(--primary),var(--primary-deep));color:#fff;padding:14px 16px;border-radius:16px;display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:13px;font-weight:700;box-shadow:0 10px 28px rgba(108,92,231,.5);z-index:150;animation:toastIn .3s ease;max-width:440px;margin:0 auto}
+.install-banner button{background:#fff;color:var(--primary);border:none;padding:8px 14px;border-radius:20px;font-weight:800;font-size:12px;cursor:pointer;font-family:inherit}
+.install-banner button:active{transform:scale(.94)}
+.install-banner .close{background:transparent;color:#fff;padding:4px 8px;font-size:18px;font-weight:400}
+
+.offline-badge{position:fixed;top:calc(8px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);background:var(--secondary);color:#fff;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;z-index:180;opacity:0;transition:opacity .3s;pointer-events:none}
+.offline-badge.show{opacity:1}
+
+@media (min-width:720px){
+  .app{max-width:460px;margin:0 auto;box-shadow:0 0 60px rgba(0,0,0,.35)}
+  body::before{background-attachment:fixed}
+}
+@media(max-height:680px){
+  .display{min-height:88px;padding:12px 16px}
+  .result{font-size:28px}
+  .btn{min-height:46px;font-size:19px}
+  .btn.op{font-size:21px}
+  .btn.eq{font-size:22px}
+  .pad{gap:8px}
+  .sci-nums .btn{font-size:17px}
+  .sci-btn{min-height:46px;font-size:13px;padding:10px 4px}
+  .splash-icon-wrap{width:120px;height:120px}
+  .splash-icon-inner{font-size:66px}
+  .splash-title{font-size:26px}
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     SPLASH الجديد
+     ============================================================ -->
+<div id="splash" class="splash">
+  <div class="splash-glow-1"></div>
+  <div class="splash-glow-2"></div>
+  <div class="splash-glow-3"></div>
+  <div class="splash-particles">
+    <span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span>
+  </div>
+  <div class="splash-content">
+    <div class="splash-icon-wrap">
+      <div class="splash-icon-glow"></div>
+      <div class="splash-icon-bg"></div>
+      <div class="splash-icon-inner">
+        <span>Y</span><span class="heart">♥</span><span>E</span>
+      </div>
+    </div>
+    <div class="splash-title">Y♥E Calculator</div>
+    <div class="splash-subtitle">Calculator</div>
+  </div>
+  <div class="splash-loader"></div>
+  <div class="splash-footer">صُنع بـ <b>♥</b> ليكون بسيطًا وقويًا</div>
+</div>
+
+<!-- Offline indicator -->
+<div class="offline-badge" id="offlineBadge">⚡ وضع الأوفلاين</div>
+
+<div id="app" class="app hidden">
+  <header class="header">
+    <div class="brand" id="brandBtn">
+      <span class="y">Y</span><span class="h">♥</span><span class="e">E</span>
+    </div>
+    <div class="badges">
+      <button class="badge on" id="angleBadge" title="DEG/RAD">DEG</button>
+      <button class="badge" id="themeBadge" title="الوضع">🌙</button>
+    </div>
+  </header>
+
+  <main class="screen-container">
+
+    <section class="screen active" id="scr-basic">
+      <div class="display">
+        <div class="expression" id="exprBasic"></div>
+        <div class="result" id="resBasic">0</div>
+      </div>
+      <div class="pad" id="padBasic">
+        <button class="btn fn" data-act="clear">AC</button>
+        <button class="btn fn" data-act="back">⌫</button>
+        <button class="btn fn" data-act="paren">( )</button>
+        <button class="btn op" data-val="÷">÷</button>
+        <button class="btn" data-val="7">7</button>
+        <button class="btn" data-val="8">8</button>
+        <button class="btn" data-val="9">9</button>
+        <button class="btn op" data-val="×">×</button>
+        <button class="btn" data-val="4">4</button>
+        <button class="btn" data-val="5">5</button>
+        <button class="btn" data-val="6">6</button>
+        <button class="btn op" data-val="−">−</button>
+        <button class="btn" data-val="1">1</button>
+        <button class="btn" data-val="2">2</button>
+        <button class="btn" data-val="3">3</button>
+        <button class="btn op" data-val="+">+</button>
+        <button class="btn" data-val="%">%</button>
+        <button class="btn" data-val="0">0</button>
+        <button class="btn" data-val=".">.</button>
+        <button class="btn eq" data-act="equals">=</button>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         SCIENTIFIC الجديدة
+         ============================================================ -->
+    <section class="screen" id="scr-sci">
+      <div class="display">
+        <div class="expression" id="exprSci"></div>
+        <div class="result" id="resSci">0</div>
+      </div>
+
+      <div class="sci-wrap">
+        <!-- تبويبات الفئات -->
+        <div class="sci-tabs" id="sciTabs">
+          <button class="sci-tab active" data-cat="trig">
+            <span class="tab-ic">△</span><span>مثلثية</span>
+          </button>
+          <button class="sci-tab" data-cat="hyper">
+            <span class="tab-ic">⋓</span><span>زائدية</span>
+          </button>
+          <button class="sci-tab" data-cat="log">
+            <span class="tab-ic">∑</span><span>لوغاريتم</span>
+          </button>
+          <button class="sci-tab" data-cat="power">
+            <span class="tab-ic">^</span><span>قوى</span>
+          </button>
+          <button class="sci-tab" data-cat="const">
+            <span class="tab-ic">π</span><span>ثوابت</span>
+          </button>
+        </div>
+
+        <!-- لوحة الدوال — تتغير حسب التبويب -->
+        <div class="sci-panel" id="sciPanel"></div>
+
+        <!-- لوحة الأرقام العلمية -->
+        <div class="sci-nums" id="sciNums">
+          <button class="btn" data-sci="7">7</button>
+          <button class="btn" data-sci="8">8</button>
+          <button class="btn" data-sci="9">9</button>
+          <button class="btn op" data-sci="÷">÷</button>
+          <button class="btn op" data-sci="%">%</button>
+          <button class="btn" data-sci="4">4</button>
+          <button class="btn" data-sci="5">5</button>
+          <button class="btn" data-sci="6">6</button>
+          <button class="btn op" data-sci="×">×</button>
+          <button class="btn op" data-sci="^">^</button>
+          <button class="btn" data-sci="1">1</button>
+          <button class="btn" data-sci="2">2</button>
+          <button class="btn" data-sci="3">3</button>
+          <button class="btn op" data-sci="−">−</button>
+          <button class="btn op" data-sci="+">+</button>
+          <button class="btn" data-sci="0">0</button>
+          <button class="btn" data-sci="00">00</button>
+          <button class="btn" data-sci=".">.</button>
+          <button class="btn" data-sci="E">E</button>
+          <button class="btn fn" data-sci="ans">Ans</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" id="scr-physics">
+      <h2 class="section-title">⚛ أدوات الفيزياء</h2>
+      <div id="physicsList" class="tools-list"></div>
+    </section>
+
+    <section class="screen" id="scr-conv">
+      <h2 class="section-title">⇄ محول الوحدات</h2>
+      <div class="conv-form">
+        <label>الفئة</label>
+        <select id="convCat"></select>
+        <label>من</label>
+        <select id="convFrom"></select>
+        <label>إلى</label>
+        <select id="convTo"></select>
+        <label>القيمة</label>
+        <input type="number" id="convIn" placeholder="0" step="any" />
+        <div class="conv-result" id="convOut">0</div>
+      </div>
+    </section>
+
+    <section class="screen" id="scr-history">
+      <div class="hist-header">
+        <h2 class="section-title">🕘 السجل</h2>
+        <button class="btn-clear-hist" id="clearHist">مسح الكل</button>
+      </div>
+      <div id="historyList" class="history-list"></div>
+    </section>
+
+    <section class="screen" id="scr-settings">
+      <h2 class="section-title">⚙ الإعدادات</h2>
+      <div class="settings-group">
+        <div class="setting-row">
+          <span>الوضع الداكن</span>
+          <label class="switch"><input type="checkbox" id="setDark"><span class="slider"></span></label>
+        </div>
+        <div class="setting-row">
+          <span>صوت الأزرار</span>
+          <label class="switch"><input type="checkbox" id="setSound" checked><span class="slider"></span></label>
+        </div>
+        <div class="setting-row">
+          <span>حفظ السجل</span>
+          <label class="switch"><input type="checkbox" id="setHistory" checked><span class="slider"></span></label>
+        </div>
+        <div class="setting-row">
+          <span>وحدة الزاوية</span>
+          <select id="setAngle"><option value="deg">درجات (DEG)</option><option value="rad">راديان (RAD)</option></select>
+        </div>
+        <div class="setting-row">
+          <span>عدد الخانات العشرية</span>
+          <select id="setPrec">
+            <option value="2">2</option><option value="4">4</option>
+            <option value="6">6</option><option value="8">8</option>
+            <option value="10" selected>10</option><option value="12">12</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="about">
+        <img class="about-logo" src="icon-512.png" alt="Y♥E" onerror="this.style.display='none'">
+        <p>Y♥E Calculator</p>
+        <p class="muted">v1.0.0 — يعمل بدون إنترنت</p>
+        <div class="sw"><span class="y">Y</span><span class="h">♥</span><span class="e">E</span></div>
+        <button class="install-btn" id="settingsInstallBtn" style="display:none">📲 تثبيت التطبيق</button>
+      </div>
+    </section>
+
+  </main>
+
+  <nav class="bottom-nav" id="navBar">
+    <button class="nav-btn active" data-tab="basic"><span class="ic">🧮</span><span>أساسي</span></button>
+    <button class="nav-btn" data-tab="sci"><span class="ic">∑</span><span>علمي</span></button>
+    <button class="nav-btn" data-tab="physics"><span class="ic">⚛</span><span>فيزياء</span></button>
+    <button class="nav-btn" data-tab="conv"><span class="ic">⇄</span><span>وحدات</span></button>
+    <button class="nav-btn" data-tab="history"><span class="ic">🕘</span><span>سجل</span></button>
+    <button class="nav-btn" data-tab="settings"><span class="ic">⚙</span><span>إعدادات</span></button>
+  </nav>
+</div>
+
+<script>
+/* ==================================================================
+   Engine (بدون تغيير)
+   ================================================================== */
+const Engine = (() => {
+  class MathError extends Error {
+    constructor(code, msg){ super(msg); this.code = code; }
+  }
+  const FN = {
+    sin:  (x, d) => Math.sin(d ? x*Math.PI/180 : x),
+    cos:  (x, d) => Math.cos(d ? x*Math.PI/180 : x),
+    tan:  (x, d) => {
+      const r = d ? x*Math.PI/180 : x;
+      if (Math.abs(Math.cos(r)) < 1e-12) throw new MathError('DOMAIN','tan غير معرف');
+      return Math.tan(r);
+    },
+    asin: (x, d) => {
+      if (x < -1 || x > 1) throw new MathError('DOMAIN','asin: النطاق [-1,1]');
+      const r = Math.asin(x); return d ? r*180/Math.PI : r;
+    },
+    acos: (x, d) => {
+      if (x < -1 || x > 1) throw new MathError('DOMAIN','acos: النطاق [-1,1]');
+      const r = Math.acos(x); return d ? r*180/Math.PI : r;
+    },
+    atan: (x, d) => { const r = Math.atan(x); return d ? r*180/Math.PI : r; },
+    sinh: Math.sinh, cosh: Math.cosh, tanh: Math.tanh,
+    ln: (x) => { if (x <= 0) throw new MathError('DOMAIN','ln يحتاج رقم موجب'); return Math.log(x); },
+    log:(x) => { if (x <= 0) throw new MathError('DOMAIN','log يحتاج رقم موجب'); return Math.log10(x); },
+    sqrt:(x)=>{ if (x < 0) throw new MathError('DOMAIN','جذر لعدد سالب'); return Math.sqrt(x); },
+    abs: Math.abs, exp: Math.exp
+  };
+
+  function tokenize(src){
+    const s = src.replace(/×/g,'*').replace(/÷/g,'/').replace(/−/g,'-');
+    const t = []; let i = 0;
+    while(i < s.length){
+      const c = s[i];
+      if(c === ' '){ i++; continue; }
+      if(/[0-9.]/.test(c)){
+        let n = '', dots = 0;
+        while(i < s.length && /[0-9.]/.test(s[i])){
+          if(s[i] === '.'){ dots++; if(dots > 1) throw new MathError('SYNTAX','رقم غير صالح'); }
+          n += s[i++];
+        }
+        if(i < s.length && (s[i] === 'E' || s[i] === 'e') &&
+           (s[i+1] === '+' || s[i+1] === '-' || /[0-9]/.test(s[i+1] || ''))){
+          n += 'e'; i++;
+          if(s[i] === '+' || s[i] === '-') n += s[i++];
+          while(i < s.length && /[0-9]/.test(s[i])) n += s[i++];
+        }
+        if(n === '.') throw new MathError('SYNTAX','نقطة بدون رقم');
+        t.push({ t:'num', v: parseFloat(n) });
+        continue;
+      }
+      if(c === 'π'){ t.push({t:'num',v:Math.PI}); i++; continue; }
+      if(c === 'e' && (i === 0 || !/[0-9]/.test(s[i-1]))){
+        t.push({t:'num',v:Math.E}); i++; continue;
+      }
+      if('+-*/^%'.includes(c)){ t.push({t:'op',v:c}); i++; continue; }
+      if(c === '('){ t.push({t:'lp'}); i++; continue; }
+      if(c === ')'){ t.push({t:'rp'}); i++; continue; }
+      if(c === '!'){ t.push({t:'bang'}); i++; continue; }
+      const fns = ['asin','acos','atan','sinh','cosh','tanh','sin','cos','tan','log','ln','abs','sqrt','exp'];
+      let hit = false;
+      for(const f of fns){
+        if(s.startsWith(f, i)){ t.push({t:'fn',v:f}); i += f.length; hit = true; break; }
+      }
+      if(hit) continue;
+      if(c === '√'){ t.push({t:'fn',v:'sqrt'}); i++; continue; }
+      throw new MathError('SYNTAX', `رمز غير معروف: ${c}`);
+    }
+    return t;
+  }
+
+  function evaluate(tokens, angleDeg){
+    let p = 0;
+    const peek = () => tokens[p];
+    const next = () => tokens[p++];
+    const eat = (type) => { const x = next(); if(!x || x.t !== type) throw new MathError('SYNTAX','تعبير غير صالح'); return x; };
+
+    function factor(){
+      const tok = peek();
+      if(!tok) throw new MathError('SYNTAX','تعبير ناقص');
+      if(tok.t === 'op' && (tok.v === '-' || tok.v === '+')){
+        next();
+        const v = factor();
+        return tok.v === '-' ? -v : v;
+      }
+      if(tok.t === 'num'){ next(); return tok.v; }
+      if(tok.t === 'lp'){
+        next();
+        const v = expr();
+        eat('rp');
+        return v;
+      }
+      if(tok.t === 'fn'){
+        next();
+        let arg;
+        if(peek() && peek().t === 'lp'){
+          next(); arg = expr(); eat('rp');
+        } else {
+          arg = factor();
+        }
+        const f = FN[tok.v];
+        if(!f) throw new MathError('SYNTAX',`دالة غير معروفة: ${tok.v}`);
+        return f(arg, angleDeg);
+      }
+      throw new MathError('SYNTAX','تعبير غير صالح');
+    }
+
+    function postfix(){
+      let v = factor();
+      while(peek() && peek().t === 'bang'){
+        next();
+        if(v < 0 || !Number.isInteger(v)) throw new MathError('DOMAIN','! يحتاج عدد صحيح موجب');
+        if(v > 170) throw new MathError('OVERFLOW','الرقم كبير جدًا');
+        let r = 1; for(let k = 2; k <= v; k++) r *= k;
+        v = r;
+      }
+      return v;
+    }
+
+    function power(){
+      const base = postfix();
+      if(peek() && peek().t === 'op' && peek().v === '^'){
+        next();
+        const e = power();
+        const r = Math.pow(base, e);
+        if(!isFinite(r)) throw new MathError('OVERFLOW','الرقم كبير جدًا');
+        return r;
+      }
+      return base;
+    }
+
+    function term(){
+      let v = power();
+      while(peek() && peek().t === 'op' && '*/%'.includes(peek().v)){
+        const op = next().v;
+        const r = power();
+        if(op === '*') v *= r;
+        else if(op === '/'){
+          if(r === 0) throw new MathError('DIV0','لا يمكن القسمة على صفر');
+          v /= r;
+        } else {
+          if(r === 0) throw new MathError('DIV0','لا يمكن القسمة على صفر');
+          v = v % r;
+        }
+      }
+      return v;
+    }
+
+    function expr(){
+      let v = term();
+      while(peek() && peek().t === 'op' && '+-'.includes(peek().v)){
+        const op = next().v;
+        const r = term();
+        v = op === '+' ? v + r : v - r;
+      }
+      return v;
+    }
+
+    const out = expr();
+    if(p < tokens.length) throw new MathError('SYNTAX','رموز زائدة');
+    if(!isFinite(out)) throw new MathError('OVERFLOW','الرقم كبير جدًا');
+    return out;
+  }
+
+  function calculate(expression, angleDeg, precision){
+    if(!expression || !expression.trim()) throw new MathError('EMPTY','أدخل عملية');
+    let open = 0;
+    for(const ch of expression){
+      if(ch === '(') open++;
+      else if(ch === ')'){ open--; if(open < 0) throw new MathError('SYNTAX','أقواس غير متوازنة'); }
+    }
+    if(open !== 0) throw new MathError('SYNTAX','أقواس غير مغلقة');
+    const tokens = tokenize(expression);
+    const value = evaluate(tokens, angleDeg);
+    return roundTo(value, precision || 10);
+  }
+
+  function roundTo(v, prec){
+    if(!isFinite(v)) return v;
+    return parseFloat(v.toPrecision(Math.max(prec, 10)));
+  }
+
+  function format(value, prec){
+    if(!isFinite(value)) return 'Error';
+    const rounded = roundTo(value, prec || 10);
+    const abs = Math.abs(rounded);
+    if(abs !== 0 && (abs >= 1e15 || abs < 1e-9)){
+      return rounded.toExponential(Math.min(prec || 10, 8)).replace(/\.?0+e/,'e');
+    }
+    let str = rounded.toString();
+    const [int, dec] = str.split('.');
+    const sign = int.startsWith('-') ? '-' : '';
+    const intAbs = sign ? int.slice(1) : int;
+    const withCommas = intAbs.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return sign + withCommas + (dec ? '.' + dec : '');
+  }
+
+  return { calculate, format, MathError };
+})();
+
+(() => {
+  'use strict';
+  const state = {
+    expr:'', result:'0', lastAns:0,
+    angleDeg:true, theme:'light', soundOn:true, historyOn:true,
+    precision:10, history:[], afterEquals:false
+  };
+
+  const KEY = 'ye_calc_v1';
+  const save = () => {
+    try {
+      localStorage.setItem(KEY, JSON.stringify({
+        angleDeg: state.angleDeg, theme: state.theme, soundOn: state.soundOn,
+        historyOn: state.historyOn, precision: state.precision,
+        history: state.history.slice(0, 80), lastAns: state.lastAns
+      }));
+    } catch(e){}
+  };
+  const load = () => {
+    try {
+      const raw = localStorage.getItem(KEY);
+      if(!raw) return;
+      const d = JSON.parse(raw);
+      Object.assign(state, {
+        angleDeg: d.angleDeg ?? true, theme: d.theme ?? 'light',
+        soundOn: d.soundOn ?? true, historyOn: d.historyOn ?? true,
+        precision: d.precision ?? 10, history: d.history ?? [],
+        lastAns: d.lastAns ?? 0
+      });
+    } catch(e){}
+  };
+
+  const $ = s => document.querySelector(s);
+  const $$ = s => Array.from(document.querySelectorAll(s));
+
+  let ac = null;
+  function beep(){
+    if(!state.soundOn) return;
+    try{
+      if(!ac) ac = new (window.AudioContext || window.webkitAudioContext)();
+      if(ac.state === 'suspended') ac.resume();
+      const o = ac.createOscillator(), g = ac.createGain();
+      o.type = 'sine'; o.frequency.value = 720;
+      g.gain.setValueAtTime(0.06, ac.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.0001, ac.currentTime + 0.05);
+      o.connect(g); g.connect(ac.destination);
+      o.start(); o.stop(ac.currentTime + 0.05);
+    } catch(e){}
+  }
+
+  let toastTimer = null;
+  function toast(msg){
+    const old = document.querySelector('.toast'); if(old) old.remove();
+    const t = document.createElement('div');
+    t.className = 'toast'; t.textContent = msg;
+    document.body.appendChild(t);
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.remove(), 2200);
+  }
+
+  function render(){
+    const expr = state.expr || '';
+    const isErr = typeof state.result === 'string' && state.result.startsWith('!');
+    const resText = isErr ? state.result.slice(1) : state.result;
+    $('#exprBasic').textContent = expr;
+    $('#exprSci').textContent = expr;
+    ['#resBasic','#resSci'].forEach(sel => {
+      const el = $(sel);
+      el.textContent = resText;
+      el.classList.toggle('error', isErr);
+    });
+    $('#angleBadge').textContent = state.angleDeg ? 'DEG' : 'RAD';
+    $('#themeBadge').textContent = state.theme === 'dark' ? '☀' : '🌙';
+  }
+
+  const OPS = '+−×÷^%';
+  function push(v){
+    const last = state.expr.slice(-1);
+    if(OPS.includes(v) && OPS.includes(last)){
+      state.expr = state.expr.slice(0, -1) + v;
+      return;
+    }
+    if(v === '.'){
+      const m = state.expr.match(/[0-9.]*$/);
+      const seg = m ? m[0] : '';
+      if(seg.includes('.')) return;
+      if(seg === ''){ state.expr += '0.'; return; }
+    }
+    if(state.expr === '' && '+×÷^%'.includes(v)) return;
+    if(state.expr === '' && v === '−'){ state.expr = '−'; return; }
+    state.expr += v;
+  }
+
+  function backspace(){
+    if(!state.expr) return;
+    const m = state.expr.match(/(asin|acos|atan|sinh|cosh|tanh|sin|cos|tan|log|ln|abs|sqrt|exp)\($/);
+    if(m) state.expr = state.expr.slice(0, -m[0].length);
+    else state.expr = state.expr.slice(0, -1);
+  }
+
+  function clearAll(){ state.expr = ''; state.result = '0'; state.afterEquals = false; }
+
+  function handleAfterEquals(v){
+    if(!state.afterEquals) return;
+    if(OPS.includes(v)){
+      state.expr = state.result.replace(/,/g, '') + v;
+      state.afterEquals = false;
+    } else if(/[0-9.(]/.test(v)){
+      state.expr = ''; state.afterEquals = false;
+    }
+  }
+
+  function equals(){
+    if(!state.expr.trim()){
+      if(state.lastAns !== 0){ state.result = Engine.format(state.lastAns, state.precision); render(); }
+      return;
+    }
+    try{
+      const v = Engine.calculate(state.expr, state.angleDeg, state.precision);
+      state.lastAns = v;
+      state.result = Engine.format(v, state.precision);
+      state.afterEquals = true;
+      if(state.historyOn){
+        state.history.unshift({ e: state.expr, r: state.result, t: Date.now() });
+        if(state.history.length > 80) state.history.pop();
+        renderHistory();
+      }
+      save();
+    } catch(err){
+      const msg = err instanceof Engine.MathError ? err.message : 'خطأ';
+      toast(msg);
+      state.result = '!' + msg;
+    }
+    render();
+  }
+
+  /* ==================================================================
+     SCIENTIFIC PANELS — لوحات الدوال حسب الفئة
+     ================================================================== */
+  const SCI_PANELS = {
+    trig: [
+      { k:'sin',    label:'sin',  cls:'trig' },
+      { k:'cos',    label:'cos',  cls:'trig' },
+      { k:'tan',    label:'tan',  cls:'trig' },
+      { k:'(',      label:'(',    cls:'special' },
+      { k:'asin',   label:'sin⁻¹', cls:'trig' },
+      { k:'acos',   label:'cos⁻¹', cls:'trig' },
+      { k:'atan',   label:'tan⁻¹', cls:'trig' },
+      { k:')',      label:')',    cls:'special' },
+    ],
+    hyper: [
+      { k:'sinh',   label:'sinh', cls:'hyper' },
+      { k:'cosh',   label:'cosh', cls:'hyper' },
+      { k:'tanh',   label:'tanh', cls:'hyper' },
+      { k:'!',      label:'n!',   cls:'hyper' },
+      { k:'abs',    label:'|x|',  cls:'hyper' },
+      { k:'sqr',    label:'x²',   cls:'hyper' },
+      { k:'inv',    label:'1/x',  cls:'hyper' },
+      { k:'fact',   label:'n!',   cls:'hyper' },
+    ],
+    log: [
+      { k:'log',    label:'log',  cls:'log' },
+      { k:'ln',     label:'ln',   cls:'log' },
+      { k:'econst', label:'e',    cls:'log' },
+      { k:'exp',    label:'eˣ',   cls:'log' },
+      { k:'pow',    label:'xʸ',   cls:'log' },
+      { k:'sqr',    label:'x²',   cls:'log' },
+      { k:'sqrt',   label:'√',    cls:'log' },
+      { k:'abs',    label:'|x|',  cls:'log' },
+    ],
+    power: [
+      { k:'pow',    label:'xʸ',   cls:'power' },
+      { k:'sqr',    label:'x²',   cls:'power' },
+      { k:'sqrt',   label:'√',    cls:'power' },
+      { k:'inv',    label:'1/x',  cls:'power' },
+      { k:'fact',   label:'n!',   cls:'power' },
+      { k:'exp',    label:'eˣ',   cls:'power' },
+      { k:'abs',    label:'|x|',  cls:'power' },
+      { k:'E',      label:'E',    cls:'power' },
+    ],
+    const: [
+      { k:'pi',     label:'π',    cls:'special' },
+      { k:'econst', label:'e',    cls:'special' },
+      { k:'ans',    label:'Ans',  cls:'special' },
+      { k:'%',      label:'%',    cls:'special' },
+      { k:'(',      label:'(',    cls:'special' },
+      { k:')',      label:')',    cls:'special' },
+      { k:'clear',  label:'AC',   cls:'ac-btn' },
+      { k:'back',   label:'⌫',    cls:'back-btn' },
+    ],
+  };
+
+  let currentSciTab = 'trig';
+
+  function renderSciPanel(){
+    const panel = $('#sciPanel');
+    const items = SCI_PANELS[currentSciTab] || SCI_PANELS.trig;
+    panel.innerHTML = items.map(it =>
+      `<button class="sci-btn ${it.cls}" data-sci="${it.k}">${it.label}</button>`
+    ).join('');
+  }
+
+  $('#sciTabs').addEventListener('click', e => {
+    const tab = e.target.closest('.sci-tab');
+    if(!tab) return;
+    beep();
+    currentSciTab = tab.dataset.cat;
+    $$('#sciTabs .sci-tab').forEach(t => t.classList.toggle('active', t.dataset.cat === currentSciTab));
+    renderSciPanel();
+  });
+
+  /* ==================================================================
+     Handlers
+     ================================================================== */
+  function applySci(key){
+    switch(key){
+      case 'clear': clearAll(); render(); return;
+      case 'back': backspace(); render(); return;
+      case 'equals': equals(); return;
+      case 'pi': push('π'); render(); return;
+      case 'econst': push('e'); render(); return;
+      case 'sqrt': state.expr += '√('; render(); return;
+      case 'sqr': if(state.expr) state.expr = '(' + state.expr + ')^2'; render(); return;
+      case 'inv': if(state.expr) state.expr = '1/(' + state.expr + ')'; render(); return;
+      case 'exp': state.expr += 'e^('; render(); return;
+      case 'fact': state.expr += '!'; render(); return;
+      case 'abs': state.expr += 'abs('; render(); return;
+      case 'pow': state.expr += '^'; render(); return;
+      case 'E': state.expr += 'E'; render(); return;
+      case 'ans': state.expr += state.lastAns.toString(); render(); return;
+      case '(': state.expr += '('; render(); return;
+      case ')': state.expr += ')'; render(); return;
+      case 'sin': case 'cos': case 'tan':
+      case 'asin': case 'acos': case 'atan':
+      case 'sinh': case 'cosh': case 'tanh':
+      case 'ln': case 'log':
+        state.expr += key + '('; render(); return;
+      default:
+        if(/^[0-9]$/.test(key) || key === '.' || OPS.includes(key)){
+          handleAfterEquals(key);
+          push(key);
+          render();
+        }
+    }
+  }
+
+  // Basic pad
+  $$('#padBasic .btn').forEach(b => {
+    b.addEventListener('click', () => {
+      beep();
+      const act = b.dataset.act, val = b.dataset.val;
+      if(act === 'clear'){ clearAll(); render(); return; }
+      if(act === 'back'){ backspace(); render(); return; }
+      if(act === 'equals'){ equals(); return; }
+      if(act === 'paren'){
+        const opens = (state.expr.match(/\(/g) || []).length;
+        const closes = (state.expr.match(/\)/g) || []).length;
+        if(opens > closes && /[0-9)πe!]$/.test(state.expr)) state.expr += ')';
+        else state.expr += '(';
+        render(); return;
+      }
+      if(val !== undefined){ handleAfterEquals(val); push(val); render(); }
+    });
+  });
+
+  // Scientific numbers
+  $$('#sciNums [data-sci]').forEach(b => {
+    b.addEventListener('click', () => {
+      beep();
+      const k = b.dataset.sci;
+      if(/^[0-9]$/.test(k) || k === '.' || k === '00' || OPS.includes(k) || k === 'E'){
+        if(k === '00'){ handleAfterEquals('0'); push('0'); push('0'); }
+        else { handleAfterEquals(k); push(k); }
+        render();
+      } else { applySci(k); }
+    });
+  });
+
+  // Scientific panel (delegated — يعمل مع التغيير الديناميكي)
+  $('#sciPanel').addEventListener('click', e => {
+    const btn = e.target.closest('[data-sci]');
+    if(!btn) return;
+    beep();
+    applySci(btn.dataset.sci);
+  });
+
+  /* ==================================================================
+     Physics
+     ================================================================== */
+  const PHYS = [
+    { id:'speed',   name:'السرعة',        f:'v = d / t', i:[{k:'d',l:'المسافة (m)'},{k:'t',l:'الزمن (s)'}], calc:v=>{ if(v.t===0) throw Error('الزمن = 0'); return v.d/v.t+' m/s'; }},
+    { id:'distance',name:'المسافة',       f:'d = v × t', i:[{k:'v',l:'السرعة (m/s)'},{k:'t',l:'الزمن (s)'}], calc:v=>v.v*v.t+' m'},
+    { id:'time',    name:'الزمن',         f:'t = d / v', i:[{k:'d',l:'المسافة (m)'},{k:'v',l:'السرعة (m/s)'}], calc:v=>{ if(v.v===0) throw Error('السرعة = 0'); return v.d/v.v+' s'; }},
+    { id:'force',   name:'القوة',         f:'F = m × a', i:[{k:'m',l:'الكتلة (kg)'},{k:'a',l:'التسارع (m/s²)'}], calc:v=>v.m*v.a+' N'},
+    { id:'density', name:'الكثافة',       f:'ρ = m / V', i:[{k:'m',l:'الكتلة (kg)'},{k:'V',l:'الحجم (m³)'}], calc:v=>{ if(v.V===0) throw Error('الحجم = 0'); return v.m/v.V+' kg/m³'; }},
+    { id:'work',    name:'الشغل',         f:'W = F × d', i:[{k:'F',l:'القوة (N)'},{k:'d',l:'الإزاحة (m)'}], calc:v=>v.F*v.d+' J'},
+    { id:'power',   name:'القدرة',        f:'P = W / t', i:[{k:'W',l:'الشغل (J)'},{k:'t',l:'الزمن (s)'}], calc:v=>{ if(v.t===0) throw Error('الزمن = 0'); return v.W/v.t+' W'; }},
+    { id:'ke',      name:'الطاقة الحركية',f:'KE = ½mv²', i:[{k:'m',l:'الكتلة (kg)'},{k:'v',l:'السرعة (m/s)'}], calc:v=>0.5*v.m*v.v*v.v+' J'},
+    { id:'pe',      name:'طاقة الوضع',    f:'PE = mgh',   i:[{k:'m',l:'الكتلة (kg)'},{k:'h',l:'الارتفاع (m)'}], calc:v=>v.m*9.81*v.h+' J'},
+    { id:'press',   name:'الضغط',         f:'P = F / A',  i:[{k:'F',l:'القوة (N)'},{k:'A',l:'المساحة (m²)'}], calc:v=>{ if(v.A===0) throw Error('المساحة = 0'); return v.F/v.A+' Pa'; }},
+    { id:'ohm',     name:'قانون أوم',     f:'V = I × R',  i:[{k:'I',l:'التيار (A)'},{k:'R',l:'المقاومة (Ω)'}], calc:v=>v.I*v.R+' V'},
+    { id:'accel',   name:'التسارع',       f:'a = Δv / t', i:[{k:'dv',l:'تغير السرعة (m/s)'},{k:'t',l:'الزمن (s)'}], calc:v=>{ if(v.t===0) throw Error('الزمن = 0'); return v.dv/v.t+' m/s²'; }},
+    { id:'wave',    name:'الموجات',       f:'v = f × λ',  i:[{k:'f',l:'التردد (Hz)'},{k:'l',l:'الطول الموجي (m)'}], calc:v=>v.f*v.l+' m/s'},
+    { id:'heat',    name:'الحرارة',       f:'Q = mcΔT',   i:[{k:'m',l:'الكتلة (kg)'},{k:'c',l:'حرارة نوعية (J/kg·K)'},{k:'dT',l:'فرق الحرارة (K)'}], calc:v=>v.m*v.c*v.dT+' J'},
+  ];
+
+  function renderPhysics(){
+    const list = $('#physicsList'); list.innerHTML = '';
+    PHYS.forEach(tool => {
+      const card = document.createElement('div');
+      card.className = 'tool-card';
+      card.innerHTML = `
+        <h3>${tool.name}<span>${tool.f}</span></h3>
+        ${tool.i.map(inp => `<div class="row"><input type="number" step="any" data-k="${inp.k}" placeholder="${inp.l}"></div>`).join('')}
+        <div class="actions"><button data-calc>احسب</button><button class="reset" data-reset>تفريغ</button></div>
+        <div class="tool-result"></div>`;
+      const inputs = card.querySelectorAll('input');
+      const res = card.querySelector('.tool-result');
+      card.querySelector('[data-calc]').addEventListener('click', () => {
+        beep();
+        const v = {};
+        for(const inp of inputs){
+          const n = parseFloat(inp.value);
+          if(isNaN(n)){ res.style.display='block'; res.style.color='var(--danger)'; res.textContent='أدخل كل القيم'; return; }
+          v[inp.dataset.k] = n;
+        }
+        try{
+          res.style.display='block'; res.style.color='var(--primary)'; res.textContent = tool.calc(v);
+        } catch(e){
+          res.style.display='block'; res.style.color='var(--danger)'; res.textContent = e.message;
+        }
+      });
+      card.querySelector('[data-reset]').addEventListener('click', () => {
+        beep(); inputs.forEach(i => i.value=''); res.style.display='none';
+      });
+      list.appendChild(card);
+    });
+  }
+
+  /* ==================================================================
+     Converter
+     ================================================================== */
+  const CATS = {
+    length:{n:'الطول', u:{m:1, km:1000, cm:0.01, mm:0.001, 'μm':1e-6, in:0.0254, ft:0.3048, yd:0.9144, mi:1609.344, nmi:1852}},
+    weight:{n:'الكتلة', u:{kg:1, g:0.001, mg:1e-6, t:1000, lb:0.45359237, oz:0.028349523125, st:6.35029318}},
+    area:{n:'المساحة', u:{'m²':1, 'km²':1e6, 'cm²':1e-4, ha:1e4, acre:4046.8564224, 'ft²':0.09290304, 'in²':6.4516e-4}},
+    volume:{n:'الحجم', u:{L:1, mL:0.001, 'm³':1000, 'cm³':0.001, gal:3.785411784, qt:0.946352946, 'ft³':28.316846592}},
+    speed:{n:'السرعة', u:{'m/s':1, 'km/h':1/3.6, mph:0.44704, knot:0.514444, 'ft/s':0.3048}},
+    time:{n:'الزمن', u:{s:1, ms:0.001, min:60, h:3600, day:86400, week:604800, year:31557600}},
+    temp:{n:'الحرارة', special:true, u:{'°C':'C','°F':'F','K':'K'}},
+    pressure:{n:'الضغط', u:{Pa:1, kPa:1000, MPa:1e6, bar:1e5, atm:101325, psi:6894.757293, mmHg:133.322}},
+    energy:{n:'الطاقة', u:{J:1, kJ:1000, cal:4.184, kcal:4184, Wh:3600, kWh:3.6e6, eV:1.602176634e-19}},
+    power:{n:'القدرة', u:{W:1, kW:1000, MW:1e6, hp:745.699872, 'BTU/h':0.29307107}},
+    angle:{n:'الزاوية', u:{deg:1, rad:180/Math.PI, grad:0.9, turn:360}},
+    data:{n:'البيانات', u:{B:1, KB:1024, MB:1048576, GB:1073741824, TB:1099511627776, bit:0.125}}
+  };
+
+  function initConv(){
+    const cat = $('#convCat'), from = $('#convFrom'), to = $('#convTo'), inp = $('#convIn'), out = $('#convOut');
+    cat.innerHTML = '';
+    Object.entries(CATS).forEach(([k,v]) => {
+      const o = document.createElement('option'); o.value = k; o.textContent = v.n; cat.appendChild(o);
+    });
+    const fill = () => {
+      const c = CATS[cat.value]; from.innerHTML = ''; to.innerHTML = '';
+      Object.keys(c.u).forEach(u => {
+        const a = document.createElement('option'); a.value = u; a.textContent = u;
+        const b = document.createElement('option'); b.value = u; b.textContent = u;
+        from.appendChild(a); to.appendChild(b);
+      });
+      if(to.options.length > 1) to.selectedIndex = 1;
+      convert();
+    };
+    const convert = () => {
+      const c = CATS[cat.value];
+      const v = parseFloat(inp.value);
+      if(isNaN(v)){ out.textContent = '0'; return; }
+      const f = from.value, t = to.value;
+      let r;
+      if(c.special){ r = convertTemp(v, f, t); }
+      else { r = (v * c.u[f]) / c.u[t]; }
+      out.textContent = formatNum(r) + ' ' + t;
+    };
+    const convertTemp = (v, f, t) => {
+      let c;
+      if(f === '°C') c = v;
+      else if(f === '°F') c = (v - 32) * 5/9;
+      else c = v - 273.15;
+      if(t === '°C') return c;
+      if(t === '°F') return c * 9/5 + 32;
+      return c + 273.15;
+    };
+    const formatNum = n => {
+      if(!isFinite(n)) return '∞';
+      const a = Math.abs(n);
+      if(a !== 0 && (a >= 1e15 || a < 1e-6)) return n.toExponential(6);
+      return parseFloat(n.toPrecision(10)).toString();
+    };
+    cat.addEventListener('change', fill);
+    from.addEventListener('change', convert);
+    to.addEventListener('change', convert);
+    inp.addEventListener('input', convert);
+    fill();
+  }
+
+  /* ==================================================================
+     History
+     ================================================================== */
+  function renderHistory(){
+    const list = $('#historyList');
+    list.innerHTML = '';
+    if(state.history.length === 0){
+      list.innerHTML = '<div class="empty-msg">لا يوجد سجل بعد</div>';
+      return;
+    }
+    state.history.forEach((item, i) => {
+      const el = document.createElement('div');
+      el.className = 'history-item';
+      el.innerHTML = `
+        <button class="del" title="حذف">✕</button>
+        <div class="hi-expr">${esc(item.e)}</div>
+        <div class="hi-res">= ${esc(item.r)}</div>`;
+      el.querySelector('.del').addEventListener('click', ev => {
+        ev.stopPropagation(); beep();
+        state.history.splice(i, 1); save(); renderHistory();
+      });
+      el.addEventListener('click', () => {
+        beep();
+        state.expr = item.e; state.result = item.r;
+        state.afterEquals = false; render();
+        switchTab('basic');
+      });
+      list.appendChild(el);
+    });
+  }
+
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+  $('#clearHist').addEventListener('click', () => {
+    beep();
+    if(state.history.length === 0) return;
+    if(confirm('مسح كل السجل؟')){ state.history = []; save(); renderHistory(); }
+  });
+
+  /* ==================================================================
+     Theme + Settings
+     ================================================================== */
+  function applyTheme(){
+    document.body.classList.toggle('dark', state.theme === 'dark');
+    $('#setDark').checked = state.theme === 'dark';
+    render();
+  }
+
+  $('#setDark').addEventListener('change', e => {
+    state.theme = e.target.checked ? 'dark' : 'light';
+    applyTheme(); save();
+  });
+  $('#setSound').addEventListener('change', e => {
+    state.soundOn = e.target.checked; save(); if(state.soundOn) beep();
+  });
+  $('#setHistory').addEventListener('change', e => {
+    state.historyOn = e.target.checked; save();
+  });
+  $('#setAngle').addEventListener('change', e => {
+    state.angleDeg = e.target.value === 'deg'; save(); render();
+  });
+  $('#setPrec').addEventListener('change', e => {
+    state.precision = parseInt(e.target.value, 10); save();
+    if(state.result && !state.result.startsWith('!')){
+      state.result = Engine.format(state.lastAns, state.precision);
+      render();
+    }
+  });
+
+  function switchTab(tab){
+    $$('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+    $$('.screen').forEach(s => s.classList.remove('active'));
+    const map = {basic:'scr-basic', sci:'scr-sci', physics:'scr-physics', conv:'scr-conv', history:'scr-history', settings:'scr-settings'};
+    const el = document.getElementById(map[tab]);
+    if(el) el.classList.add('active');
+    if(tab === 'history') renderHistory();
+  }
+  $$('.nav-btn').forEach(b => b.addEventListener('click', () => { beep(); switchTab(b.dataset.tab); }));
+
+  $('#angleBadge').addEventListener('click', () => {
+    beep();
+    state.angleDeg = !state.angleDeg; save(); render();
+    $('#setAngle').value = state.angleDeg ? 'deg' : 'rad';
+    toast(state.angleDeg ? 'وضع DEG' : 'وضع RAD');
+  });
+  $('#themeBadge').addEventListener('click', () => {
+    beep();
+    state.theme = state.theme === 'dark' ? 'light' : 'dark';
+    applyTheme(); save();
+  });
+  $('#brandBtn').addEventListener('click', () => { beep(); switchTab('settings'); });
+
+  document.addEventListener('keydown', e => {
+    const active = document.querySelector('.screen.active');
+    if(!active) return;
+    const ok = active.id === 'scr-basic' || active.id === 'scr-sci';
+    if(!ok) return;
+    if(/^[0-9]$/.test(e.key)){ push(e.key); render(); beep(); }
+    else if(e.key === '.'){ push('.'); render(); beep(); }
+    else if(e.key === '+'){ push('+'); render(); beep(); }
+    else if(e.key === '-'){ push('−'); render(); beep(); }
+    else if(e.key === '*'){ push('×'); render(); beep(); }
+    else if(e.key === '/'){ e.preventDefault(); push('÷'); render(); beep(); }
+    else if(e.key === '(' || e.key === ')'){ push(e.key); render(); beep(); }
+    else if(e.key === '^'){ push('^'); render(); beep(); }
+    else if(e.key === '%'){ push('%'); render(); beep(); }
+    else if(e.key === 'Enter' || e.key === '='){ e.preventDefault(); equals(); beep(); }
+    else if(e.key === 'Backspace'){ backspace(); render(); beep(); }
+    else if(e.key === 'Escape'){ clearAll(); render(); beep(); }
+  });
+
+  function updateOnlineStatus(){
+    const badge = $('#offlineBadge');
+    if(!navigator.onLine){
+      badge.classList.add('show');
+      setTimeout(() => badge.classList.remove('show'), 3000);
+    }
+  }
+  window.addEventListener('offline', updateOnlineStatus);
+  window.addEventListener('online', () => {
+    const badge = $('#offlineBadge');
+    badge.textContent = '✅ تم الاتصال';
+    badge.style.background = 'var(--secondary)';
+    badge.classList.add('show');
+    setTimeout(() => badge.classList.remove('show'), 2000);
+  });
+
+  function init(){
+    load();
+    applyTheme();
+    $('#setSound').checked = state.soundOn;
+    $('#setHistory').checked = state.historyOn;
+    $('#setAngle').value = state.angleDeg ? 'deg' : 'rad';
+    $('#setPrec').value = String(state.precision);
+    renderPhysics();
+    initConv();
+    renderHistory();
+    renderSciPanel();
+    render();
+    setTimeout(() => {
+      $('#splash').classList.add('hidden');
+      $('#app').classList.remove('hidden');
+    }, 3100);
+  }
+
+  document.addEventListener('DOMContentLoaded', init);
+})();
+
+/* ==================================================================
+   Service Worker + Install Prompt
+   ================================================================== */
+(function(){
+  'use strict';
+
+  if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js')
+        .then(reg => console.log('✅ SW registered:', reg.scope))
+        .catch(err => console.warn('⚠️ SW registration failed:', err.message));
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    let deferredPrompt = null;
+    const DISMISS_KEY = 'ye_banner_dismissed';
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+                       || window.navigator.standalone === true;
+
+    function dismissBanner(){
+      try { localStorage.setItem(DISMISS_KEY, '1'); } catch(e){}
+      const b = document.querySelector('.install-banner');
+      if (b) b.remove();
+    }
+
+    function showInstallBanner(){
+      if (isStandalone) return;
+      if (document.querySelector('.install-banner')) return;
+      try { if (localStorage.getItem(DISMISS_KEY)) return; } catch(e){}
+
+      const b = document.createElement('div');
+      b.className = 'install-banner';
+      b.innerHTML = `
+        <span>📲 ثبّت Y♥E Calculator</span>
+        <div style="display:flex;gap:6px">
+          <button id="installBtn">تثبيت</button>
+          <button class="close" id="installClose">✕</button>
+        </div>`;
+      document.body.appendChild(b);
+
+      const btn = b.querySelector('#installBtn');
+      const closeBtn = b.querySelector('#installClose');
+
+      btn.addEventListener('click', async () => {
+        if (!deferredPrompt) { dismissBanner(); return; }
+        deferredPrompt.prompt();
+        try {
+          const { outcome } = await deferredPrompt.userChoice;
+          if (outcome === 'accepted') dismissBanner();
+          else b.remove();
+        } catch(e){ b.remove(); }
+        deferredPrompt = null;
+      });
+
+      closeBtn.addEventListener('click', dismissBanner);
+    }
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      const sb = document.getElementById('settingsInstallBtn');
+      if (sb) sb.style.display = 'block';
+      showInstallBanner();
+    });
+
+    const settingsBtn = document.getElementById('settingsInstallBtn');
+    if (settingsBtn) {
+      settingsBtn.addEventListener('click', async () => {
+        if (!deferredPrompt) {
+          alert('التطبيق مثبّت بالفعل، أو المتصفح لا يدعم التثبيت التلقائي.\nيمكنك استخدام قائمة المتصفح → "إضافة إلى الشاشة الرئيسية"');
+          return;
+        }
+        deferredPrompt.prompt();
+        try {
+          const { outcome } = await deferredPrompt.userChoice;
+          if (outcome === 'accepted') {
+            settingsBtn.style.display = 'none';
+            dismissBanner();
+          }
+        } catch(e){}
+        deferredPrompt = null;
+      });
+    }
+
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    if (isIOS && !isStandalone) {
+      setTimeout(() => {
+        if (document.querySelector('.install-banner')) return;
+        try { if (localStorage.getItem(DISMISS_KEY)) return; } catch(e){}
+
+        const b = document.createElement('div');
+        b.className = 'install-banner';
+        b.innerHTML = `
+          <span>📲 اضغط زر المشاركة <b>⬆</b> ثم "إضافة إلى الشاشة الرئيسية"</span>
+          <button class="close" id="installClose">✕</button>`;
+        document.body.appendChild(b);
+        b.querySelector('#installClose').addEventListener('click', dismissBanner);
+      }, 4000);
+    }
+  });
+})();
+</script>
+</body>
+</html>
