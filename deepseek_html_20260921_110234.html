@@ -1,0 +1,1416 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+<meta name="theme-color" content="#0A0E1A" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Y♥E Tools" />
+<meta name="mobile-web-app-capable" content="yes" />
+<title>Y♥E Tools</title>
+<link rel="icon" href="icon.png" />
+<link rel="apple-touch-icon" href="icon.png" />
+<style>
+/* ============================================================
+   MODERN GLASS DESIGN
+   ============================================================ */
+:root,[data-theme="light"]{
+  --bg: #EEF1F8;
+  --bg-gradient: linear-gradient(135deg,#EEF1F8 0%,#E5E9F5 40%,#F5E8EE 100%);
+  --surface: rgba(255,255,255,0.72);
+  --surface-solid: #FFFFFF;
+  --surface2: rgba(240,243,250,0.85);
+  --surface3: rgba(230,235,245,0.9);
+  --primary: #6366F1;
+  --primary-2: #8B5CF6;
+  --primary-soft: rgba(99,102,241,0.12);
+  --accent: #EC4899;
+  --accent-soft: rgba(236,72,153,0.12);
+  --secondary: #10B981;
+  --secondary-soft: rgba(16,185,129,0.12);
+  --danger: #EF4444;
+  --warning: #F59E0B;
+  --text: #0F172A;
+  --text2: #334155;
+  --muted: #64748B;
+  --muted2: #94A3B8;
+  --border: rgba(148,163,184,0.2);
+  --border-strong: rgba(148,163,184,0.35);
+  --glow: 0 8px 32px rgba(99,102,241,0.15);
+  --card-shadow: 0 4px 20px rgba(15,23,42,0.06);
+  --card-hover: 0 8px 28px rgba(15,23,42,0.1);
+}
+[data-theme="dark"]{
+  --bg: #05060B;
+  --bg-gradient: linear-gradient(135deg,#05060B 0%,#0B0F1F 40%,#0F0815 100%);
+  --surface: rgba(20,25,40,0.65);
+  --surface-solid: #0F1420;
+  --surface2: rgba(30,36,52,0.7);
+  --surface3: rgba(40,48,68,0.75);
+  --primary: #818CF8;
+  --primary-2: #A78BFA;
+  --primary-soft: rgba(129,140,248,0.15);
+  --accent: #F472B6;
+  --accent-soft: rgba(244,114,182,0.15);
+  --secondary: #34D399;
+  --secondary-soft: rgba(52,211,153,0.15);
+  --danger: #F87171;
+  --warning: #FBBF24;
+  --text: #F1F5F9;
+  --text2: #CBD5E1;
+  --muted: #94A3B8;
+  --muted2: #64748B;
+  --border: rgba(148,163,184,0.15);
+  --border-strong: rgba(148,163,184,0.3);
+  --glow: 0 8px 40px rgba(129,140,248,0.3);
+  --card-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  --card-hover: 0 8px 32px rgba(129,140,248,0.2);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{
+  height:100%;
+  font-family:-apple-system,"Segoe UI",Tahoma,system-ui,sans-serif;
+  color:var(--text);
+  overflow:hidden;
+  background:var(--bg);
+  transition:background .4s ease,color .3s;
+  -webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:"";
+  position:fixed;inset:0;
+  background:var(--bg-gradient);
+  z-index:-2;
+  transition:background .4s ease;
+}
+body::after{
+  content:"";
+  position:fixed;
+  top:-50%;left:-50%;
+  width:200%;height:200%;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(99,102,241,0.15) 0%, transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(236,72,153,0.12) 0%, transparent 40%),
+    radial-gradient(circle at 50% 50%, rgba(16,185,129,0.08) 0%, transparent 50%);
+  animation:bgFloat 20s ease-in-out infinite;
+  z-index:-1;
+  pointer-events:none;
+}
+[data-theme="dark"] body::after{
+  background:
+    radial-gradient(circle at 20% 30%, rgba(129,140,248,0.25) 0%, transparent 45%),
+    radial-gradient(circle at 80% 70%, rgba(244,114,182,0.18) 0%, transparent 45%),
+    radial-gradient(circle at 50% 50%, rgba(52,211,153,0.12) 0%, transparent 55%);
+}
+@keyframes bgFloat{
+  0%,100%{transform:translate(0,0) rotate(0deg)}
+  50%{transform:translate(-5%,-5%) rotate(3deg)}
+}
+.hidden{display:none!important}
+
+/* HEADER */
+.header{
+  position:sticky;top:0;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:14px 18px;
+  padding-top:calc(14px + env(safe-area-inset-top));
+  background:var(--surface);
+  backdrop-filter:blur(24px) saturate(180%);
+  -webkit-backdrop-filter:blur(24px) saturate(180%);
+  border-bottom:1px solid var(--border);
+  z-index:100;
+  flex-shrink:0;
+}
+.brand{
+  font-weight:800;font-size:20px;
+  display:flex;align-items:center;gap:2px;
+  cursor:pointer;
+  letter-spacing:-.5px;
+}
+.brand .y{color:#6366F1}
+.brand .h{color:#EC4899}
+.brand .e{color:#10B981}
+[data-theme="dark"] .brand .y{color:#818CF8}
+[data-theme="dark"] .brand .h{color:#F472B6}
+[data-theme="dark"] .brand .e{color:#34D399}
+.brand .t{
+  color:var(--muted);font-size:11px;font-weight:700;
+  margin-right:10px;letter-spacing:2px;
+  text-transform:uppercase;
+}
+.icon-btn{
+  width:42px;height:42px;
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;
+  cursor:pointer;
+  color:var(--text);
+  transition:transform .15s,background .2s;
+  backdrop-filter:blur(10px);
+}
+.icon-btn:active{transform:scale(.92)}
+.icon-btn:hover{background:var(--surface3)}
+
+/* APP SHELL */
+.app{
+  height:100vh;height:100dvh;
+  display:flex;flex-direction:column;
+  max-width:480px;margin:0 auto;
+  position:relative;
+}
+.tools-container{
+  flex:1;overflow-y:auto;overflow-x:hidden;
+  padding:18px 16px;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:thin;
+  scrollbar-color:var(--border-strong) transparent;
+}
+.tools-container::-webkit-scrollbar{width:6px}
+.tools-container::-webkit-scrollbar-track{background:transparent}
+.tools-container::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:3px}
+
+/* HOME */
+.home-hero{
+  text-align:center;
+  margin-bottom:24px;
+  padding:12px 0;
+}
+.home-hero h1{
+  font-size:28px;font-weight:900;
+  letter-spacing:-1px;
+  background:linear-gradient(135deg,var(--primary) 0%,var(--accent) 50%,var(--secondary) 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  margin-bottom:6px;
+}
+.home-hero p{
+  font-size:13px;color:var(--muted);
+  font-weight:600;
+}
+.home-badge{
+  display:inline-block;
+  padding:4px 12px;
+  background:var(--primary-soft);
+  color:var(--primary);
+  border-radius:20px;
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:1px;
+  margin-top:10px;
+  border:1px solid var(--border);
+}
+
+.tools-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+  padding-bottom:30px;
+}
+.tool-tile{
+  position:relative;
+  background:var(--surface);
+  backdrop-filter:blur(20px) saturate(180%);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:18px 12px;
+  text-align:center;
+  cursor:pointer;
+  box-shadow:var(--card-shadow);
+  transition:all .25s cubic-bezier(.4,0,.2,1);
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  min-height:130px;
+  justify-content:center;
+  overflow:hidden;
+}
+.tool-tile::before{
+  content:"";
+  position:absolute;
+  top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--primary),transparent);
+  opacity:0;
+  transition:opacity .3s;
+}
+.tool-tile:hover{box-shadow:var(--card-hover);transform:translateY(-2px)}
+.tool-tile:hover::before{opacity:1}
+.tool-tile:active{transform:scale(.96)}
+.tool-tile .tile-ic{
+  font-size:28px;
+  width:56px;height:56px;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:18px;
+  background:var(--primary-soft);
+  border:1px solid var(--border);
+  transition:transform .3s;
+}
+.tool-tile:hover .tile-ic{transform:scale(1.08) rotate(-3deg)}
+.tool-tile .tile-name{
+  font-size:13px;font-weight:800;
+  color:var(--text);
+  letter-spacing:-.2px;
+}
+.tool-tile .tile-desc{
+  font-size:10px;
+  color:var(--muted);
+  font-weight:600;
+}
+
+/* TOOL PAGE */
+.tool-page{animation:pageIn .35s cubic-bezier(.4,0,.2,1)}
+@keyframes pageIn{
+  from{opacity:0;transform:translateY(12px) scale(.98)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+.tool-header{
+  display:flex;align-items:center;gap:12px;
+  margin-bottom:20px;
+}
+.back-btn{
+  width:42px;height:42px;
+  background:var(--surface);
+  backdrop-filter:blur(16px);
+  border:1px solid var(--border);
+  border-radius:12px;
+  font-size:18px;
+  cursor:pointer;
+  color:var(--text);
+  font-weight:700;
+  transition:transform .15s,background .2s;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.back-btn:active{transform:scale(.92);background:var(--surface2)}
+.tool-header h2{
+  font-size:19px;font-weight:800;
+  color:var(--text);
+  letter-spacing:-.4px;
+  display:flex;align-items:center;gap:8px;
+}
+.tool-header h2 .t-ic{
+  font-size:22px;
+  width:38px;height:38px;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:12px;
+  background:var(--primary-soft);
+  border:1px solid var(--border);
+}
+
+/* CARD */
+.card{
+  background:var(--surface);
+  backdrop-filter:blur(20px) saturate(180%);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:18px;
+  margin-bottom:14px;
+  box-shadow:var(--card-shadow);
+  position:relative;
+  overflow:hidden;
+}
+.card::before{
+  content:"";
+  position:absolute;
+  top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.5),transparent);
+}
+[data-theme="dark"] .card::before{
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.08),transparent);
+}
+.card h3{
+  font-size:14px;color:var(--text);
+  margin-bottom:14px;
+  font-weight:800;
+  letter-spacing:-.2px;
+  display:flex;align-items:center;gap:8px;
+}
+.card h3 .h-ic{
+  font-size:18px;
+  width:32px;height:32px;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:10px;
+  background:var(--primary-soft);
+}
+
+/* FIELDS */
+.field{margin-bottom:14px}
+.field label{
+  display:block;
+  font-size:11px;
+  color:var(--muted);
+  font-weight:800;
+  margin-bottom:7px;
+  letter-spacing:.3px;
+  text-transform:uppercase;
+}
+.field input,
+.field select,
+.field textarea{
+  width:100%;
+  padding:13px 16px;
+  border-radius:14px;
+  border:1px solid var(--border);
+  background:var(--surface2);
+  color:var(--text);
+  font-size:15px;
+  font-family:inherit;
+  outline:none;
+  transition:all .2s;
+  font-weight:600;
+}
+.field input:focus,
+.field select:focus,
+.field textarea:focus{
+  border-color:var(--primary);
+  background:var(--surface-solid);
+  box-shadow:0 0 0 4px var(--primary-soft);
+}
+[data-theme="dark"] .field input:focus,
+[data-theme="dark"] .field select:focus,
+[data-theme="dark"] .field textarea:focus{
+  background:var(--surface-solid);
+}
+.field textarea{
+  resize:vertical;
+  min-height:100px;
+  line-height:1.5;
+}
+.field-row{display:flex;gap:10px}
+.field-row > *{flex:1;min-width:0}
+
+/* BUTTONS */
+.btn-primary{
+  width:100%;
+  padding:15px;
+  border-radius:14px;
+  border:none;
+  background:linear-gradient(135deg,var(--primary) 0%,var(--primary-2) 100%);
+  color:#fff;
+  font-size:15px;
+  font-weight:800;
+  cursor:pointer;
+  font-family:inherit;
+  transition:transform .12s,box-shadow .2s;
+  box-shadow:0 4px 14px rgba(99,102,241,0.35);
+  letter-spacing:-.2px;
+}
+.btn-primary:hover{box-shadow:0 6px 20px rgba(99,102,241,0.5)}
+.btn-primary:active{transform:scale(.97);box-shadow:0 2px 8px rgba(99,102,241,0.4)}
+[data-theme="dark"] .btn-primary{
+  background:linear-gradient(135deg,#818CF8 0%,#A78BFA 100%);
+  box-shadow:0 4px 20px rgba(129,140,248,0.4);
+}
+
+.btn-secondary{
+  padding:11px 16px;
+  border-radius:12px;
+  border:1px solid var(--border);
+  background:var(--surface2);
+  color:var(--text);
+  font-size:13px;
+  font-weight:700;
+  cursor:pointer;
+  font-family:inherit;
+  transition:all .15s;
+}
+.btn-secondary:hover{background:var(--surface3)}
+.btn-secondary:active{transform:scale(.95)}
+
+/* RESULT */
+.result-box{
+  margin-top:14px;
+  padding:20px 16px;
+  border-radius:16px;
+  background:linear-gradient(135deg,var(--primary-soft),var(--accent-soft));
+  color:var(--primary);
+  font-size:22px;
+  font-weight:900;
+  text-align:center;
+  direction:ltr;
+  font-family:ui-monospace,"SF Mono",Menlo,monospace;
+  word-break:break-all;
+  border:1px solid var(--border);
+  min-height:70px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  letter-spacing:-.5px;
+  animation:resultIn .35s cubic-bezier(.4,0,.2,1);
+}
+[data-theme="dark"] .result-box{
+  background:linear-gradient(135deg,rgba(129,140,248,0.15),rgba(244,114,182,0.1));
+  color:#A5B4FC;
+}
+@keyframes resultIn{
+  from{opacity:0;transform:scale(.95)}
+  to{opacity:1;transform:scale(1)}
+}
+.result-box.error{
+  color:var(--danger);
+  font-size:14px;
+  background:rgba(239,68,68,0.1);
+  border-color:rgba(239,68,68,0.3);
+}
+.result-label{
+  font-size:11px;
+  color:var(--muted);
+  text-align:center;
+  margin-top:8px;
+  font-weight:700;
+  letter-spacing:.3px;
+}
+
+/* QR */
+.qr-wrap{
+  text-align:center;
+  padding:20px;
+  background:#fff;
+  border-radius:18px;
+  margin-top:14px;
+  box-shadow:var(--card-shadow);
+}
+.qr-wrap img{max-width:100%;height:auto;display:block;margin:0 auto}
+
+/* PASSWORD */
+.password-output{
+  display:flex;gap:8px;margin-top:14px;
+}
+.password-output input{
+  flex:1;
+  padding:16px;
+  font-family:ui-monospace,monospace;
+  font-size:15px;
+  font-weight:800;
+  background:var(--surface2);
+  color:var(--text);
+  border:1px solid var(--border);
+  border-radius:14px;
+  text-align:center;
+  direction:ltr;
+  letter-spacing:1px;
+}
+.copy-btn{
+  width:56px;height:56px;
+  background:linear-gradient(135deg,var(--primary),var(--primary-2));
+  color:#fff;
+  border:none;
+  border-radius:14px;
+  font-size:20px;
+  cursor:pointer;
+  transition:transform .12s;
+  box-shadow:0 4px 14px rgba(99,102,241,0.35);
+}
+.copy-btn:active{transform:scale(.9)}
+
+/* TOAST */
+.toast{
+  position:fixed;
+  bottom:32px;left:50%;
+  transform:translateX(-50%);
+  background:linear-gradient(135deg,var(--primary),var(--primary-2));
+  color:#fff;
+  padding:14px 24px;
+  border-radius:16px;
+  font-size:14px;
+  font-weight:800;
+  z-index:9999;
+  box-shadow:0 12px 32px rgba(99,102,241,0.4);
+  animation:toastIn .35s cubic-bezier(.4,0,.2,1);
+  max-width:90%;
+  text-align:center;
+  backdrop-filter:blur(10px);
+}
+@keyframes toastIn{
+  from{opacity:0;transform:translate(-50%,20px) scale(.9)}
+  to{opacity:1;transform:translate(-50%,0) scale(1)}
+}
+
+/* STAT GRID */
+.stat-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+  margin-top:14px;
+}
+.stat-item{
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:14px 10px;
+  text-align:center;
+  backdrop-filter:blur(10px);
+  transition:all .2s;
+}
+.stat-item:hover{transform:translateY(-2px);box-shadow:var(--card-shadow)}
+.stat-item .stat-val{
+  font-size:24px;
+  font-weight:900;
+  background:linear-gradient(135deg,var(--primary),var(--accent));
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  direction:ltr;
+  font-family:ui-monospace,monospace;
+  letter-spacing:-.5px;
+}
+.stat-item .stat-lab{
+  font-size:10px;
+  color:var(--muted);
+  margin-top:6px;
+  font-weight:800;
+  letter-spacing:.5px;
+  text-transform:uppercase;
+}
+
+/* RADIO GROUP */
+.radio-group{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+}
+.radio-group label{
+  flex:1;
+  min-width:70px;
+  padding:12px 8px;
+  border-radius:12px;
+  background:var(--surface2);
+  border:1px solid var(--border);
+  text-align:center;
+  font-size:12px;
+  font-weight:800;
+  cursor:pointer;
+  color:var(--text);
+  transition:all .2s;
+}
+.radio-group input{display:none}
+.radio-group label:hover{background:var(--surface3)}
+.radio-group label:has(input:checked){
+  background:linear-gradient(135deg,var(--primary),var(--primary-2));
+  color:#fff;
+  border-color:transparent;
+  box-shadow:0 4px 14px rgba(99,102,241,0.35);
+  transform:translateY(-1px);
+}
+
+/* INFO LIST */
+.info-list{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  margin-top:12px;
+}
+.info-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px 16px;
+  background:var(--surface2);
+  border-radius:12px;
+  font-size:13px;
+  border:1px solid var(--border);
+  gap:8px;
+}
+.info-row .k{color:var(--muted);font-weight:700;font-size:12px}
+.info-row .v{
+  color:var(--text);
+  font-weight:800;
+  direction:ltr;
+  font-family:ui-monospace,monospace;
+  word-break:break-all;
+  text-align:left;
+}
+
+/* RESPONSIVE */
+@media(max-width:360px){
+  .tools-grid{gap:10px}
+  .tool-tile{padding:14px 10px;min-height:115px}
+  .tool-tile .tile-ic{font-size:24px;width:48px;height:48px}
+  .tool-tile .tile-name{font-size:12px}
+  .home-hero h1{font-size:24px}
+}
+</style>
+</head>
+<body>
+
+<div id="app" class="app">
+  <header class="header">
+    <div class="brand" onclick="goHome()">
+      <span class="y">Y</span><span class="h">♥</span><span class="e">E</span>
+      <span class="t">TOOLS</span>
+    </div>
+    <button class="icon-btn" id="themeBtn">🌙</button>
+  </header>
+
+  <div class="tools-container" id="container"></div>
+</div>
+
+<script>
+"use strict";
+
+/* ============================================================
+   THEME
+============================================================ */
+var THEME_KEY = 'ye_tools_theme';
+function getTheme(){
+  try{ return localStorage.getItem(THEME_KEY) || 'light'; }catch(e){ return 'light'; }
+}
+function setTheme(t){
+  try{ localStorage.setItem(THEME_KEY, t); }catch(e){}
+  document.documentElement.setAttribute('data-theme', t);
+  var btn = document.getElementById('themeBtn');
+  if(btn) btn.textContent = t === 'dark' ? '☀' : '🌙';
+  var meta = document.querySelector('meta[name="theme-color"]');
+  if(meta) meta.setAttribute('content', t === 'dark' ? '#05060B' : '#EEF1F8');
+}
+
+/* ============================================================
+   UTILITIES
+============================================================ */
+function toast(msg){
+  var old = document.querySelector('.toast');
+  if(old) old.remove();
+  var t = document.createElement('div');
+  t.className = 'toast';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(function(){ t.remove(); }, 2200);
+}
+function fmt(n, prec){
+  prec = prec || 10;
+  if(!isFinite(n)) return '∞';
+  if(isNaN(n)) return '—';
+  var a = Math.abs(n);
+  if(a !== 0 && (a >= 1e15 || a < 1e-6)){
+    return n.toExponential(6).replace(/\.?0+e/,'e');
+  }
+  var r = parseFloat(n.toPrecision(prec));
+  var parts = r.toString().split('.');
+  var int = parts[0], dec = parts[1] || '';
+  var sign = int.charAt(0) === '-' ? '-' : '';
+  var intAbs = sign ? int.slice(1) : int;
+  var withCommas = intAbs.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return sign + withCommas + (dec ? '.' + dec : '');
+}
+function esc(s){
+  return String(s).replace(/[&<>"']/g, function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+  });
+}
+
+/* ============================================================
+   TOOLS REGISTRY
+============================================================ */
+var TOOLS = [
+  { id:'converter', icon:'⇄',  name:'محوّل الوحدات',    desc:'12 فئة' },
+  { id:'age',       icon:'🎂', name:'حاسبة العمر',       desc:'تفصيلي' },
+  { id:'finance',   icon:'💰', name:'الحاسبة المالية',  desc:'قروض وزكاة' },
+  { id:'bmi',       icon:'⚖️', name:'مؤشر الكتلة',       desc:'BMI' },
+  { id:'currency',  icon:'💱', name:'محوّل العملات',     desc:'يدوي' },
+  { id:'password',  icon:'🔐', name:'مولّد كلمات السر', desc:'قوي' },
+  { id:'qr',        icon:'📱', name:'QR Code',           desc:'توليد' },
+  { id:'random',    icon:'🎲', name:'رقم عشوائي',         desc:'نطاق' },
+  { id:'wordcount', icon:'📝', name:'عدّاد الكلمات',      desc:'نص' },
+  { id:'calories',  icon:'🍎', name:'حاسبة السعرات',    desc:'BMR' },
+  { id:'base',      icon:'💯', name:'محوّل الأنظمة',      desc:'ثنائي...' },
+  { id:'cooking',   icon:'🍳', name:'حاسبة الطبخ',        desc:'وحدات' }
+];
+
+/* ============================================================
+   HOME
+============================================================ */
+function renderHome(){
+  var c = document.getElementById('container');
+  var grid = '';
+  for(var i = 0; i < TOOLS.length; i++){
+    var t = TOOLS[i];
+    grid += '<div class="tool-tile" data-tool="' + t.id + '">' +
+              '<div class="tile-ic">' + t.icon + '</div>' +
+              '<div class="tile-name">' + t.name + '</div>' +
+              '<div class="tile-desc">' + t.desc + '</div>' +
+            '</div>';
+  }
+  c.innerHTML =
+    '<div class="home-hero">' +
+      '<h1>Y♥E Tools</h1>' +
+      '<p>12 أداة ذكية تعمل بدون إنترنت</p>' +
+      '<div class="home-badge">✦ MODERN GLASS</div>' +
+    '</div>' +
+    '<div class="tools-grid">' + grid + '</div>';
+
+  var tiles = c.querySelectorAll('.tool-tile');
+  for(var j = 0; j < tiles.length; j++){
+    tiles[j].onclick = function(){
+      openTool(this.dataset.tool);
+    };
+  }
+  window.scrollTo(0, 0);
+}
+
+/* ============================================================
+   ROUTER
+============================================================ */
+function goHome(){
+  renderHome();
+}
+function openTool(id){
+  var tool = null;
+  for(var i = 0; i < TOOLS.length; i++){
+    if(TOOLS[i].id === id){ tool = TOOLS[i]; break; }
+  }
+  if(!tool) return;
+  var c = document.getElementById('container');
+  var renderer = RENDERERS[id];
+  if(!renderer){ toast('قيد التطوير'); return; }
+  c.innerHTML =
+    '<div class="tool-header">' +
+      '<button class="back-btn" onclick="goHome()">←</button>' +
+      '<h2><span class="t-ic">' + tool.icon + '</span>' + tool.name + '</h2>' +
+    '</div>' +
+    '<div class="tool-page" id="toolContent"></div>';
+  renderer(document.getElementById('toolContent'));
+  window.scrollTo(0, 0);
+}
+
+/* ============================================================
+   RENDERERS (مُعرَّف مبكرًا)
+============================================================ */
+var RENDERERS = {};
+
+/* --- Tool 1: Converter --- */
+var UNITS = {
+  length:{n:'الطول', u:{m:1,km:1000,cm:0.01,mm:0.001,'μm':1e-6,in:0.0254,ft:0.3048,yd:0.9144,mi:1609.344,nmi:1852}},
+  weight:{n:'الكتلة', u:{kg:1,g:0.001,mg:1e-6,t:1000,lb:0.45359237,oz:0.028349523125,st:6.35029318}},
+  area:{n:'المساحة', u:{'m²':1,'km²':1e6,'cm²':1e-4,ha:1e4,acre:4046.8564224,'ft²':0.09290304,'in²':6.4516e-4}},
+  volume:{n:'الحجم', u:{L:1,mL:0.001,'m³':1000,'cm³':0.001,gal:3.785411784,qt:0.946352946,'ft³':28.316846592}},
+  speed:{n:'السرعة', u:{'m/s':1,'km/h':1/3.6,mph:0.44704,knot:0.514444,'ft/s':0.3048}},
+  time:{n:'الزمن', u:{s:1,ms:0.001,min:60,h:3600,day:86400,week:604800,year:31557600}},
+  temp:{n:'الحرارة', special:true, u:{'°C':'C','°F':'F','K':'K'}},
+  pressure:{n:'الضغط', u:{Pa:1,kPa:1000,MPa:1e6,bar:1e5,atm:101325,psi:6894.757293,mmHg:133.322}},
+  energy:{n:'الطاقة', u:{J:1,kJ:1000,cal:4.184,kcal:4184,Wh:3600,kWh:3.6e6,eV:1.602176634e-19}},
+  power:{n:'القدرة', u:{W:1,kW:1000,MW:1e6,hp:745.699872}},
+  angle:{n:'الزاوية', u:{deg:1,rad:180/Math.PI,grad:0.9,turn:360}},
+  data:{n:'البيانات', u:{B:1,KB:1024,MB:1048576,GB:1073741824,TB:1099511627776,bit:0.125}}
+};
+
+RENDERERS.converter = function(c){
+  c.innerHTML =
+    '<div class="card">' +
+      '<h3><span class="h-ic">⇄</span> محوّل الوحدات</h3>' +
+      '<div class="field"><label>الفئة</label><select id="cat"></select></div>' +
+      '<div class="field"><label>من</label><select id="from"></select></div>' +
+      '<div class="field"><label>إلى</label><select id="to"></select></div>' +
+      '<div class="field"><label>القيمة</label><input type="number" id="val" placeholder="0" step="any" inputmode="decimal" /></div>' +
+      '<div class="result-box" id="res">0</div>' +
+    '</div>';
+
+  var cat = c.querySelector('#cat'),
+      from = c.querySelector('#from'),
+      to = c.querySelector('#to'),
+      val = c.querySelector('#val'),
+      res = c.querySelector('#res');
+
+  var keys = Object.keys(UNITS);
+  for(var i = 0; i < keys.length; i++){
+    var o = document.createElement('option');
+    o.value = keys[i]; o.textContent = UNITS[keys[i]].n;
+    cat.appendChild(o);
+  }
+
+  function fillUnits(){
+    var u = UNITS[cat.value];
+    from.innerHTML = ''; to.innerHTML = '';
+    var keys2 = u.special ? u.u : Object.keys(u.u);
+    for(var j = 0; j < keys2.length; j++){
+      var a = document.createElement('option'); a.value = keys2[j]; a.textContent = keys2[j];
+      var b = document.createElement('option'); b.value = keys2[j]; b.textContent = keys2[j];
+      from.appendChild(a); to.appendChild(b);
+    }
+    if(to.options.length > 1) to.selectedIndex = 1;
+    calc();
+  }
+
+  function calc(){
+    var u = UNITS[cat.value];
+    var v = parseFloat(val.value);
+    if(isNaN(v)){ res.textContent = '0'; res.classList.remove('error'); return; }
+    try{
+      var r;
+      if(u.special){
+        var cc;
+        var f = from.value, t = to.value;
+        if(f === '°C') cc = v;
+        else if(f === '°F') cc = (v - 32) * 5/9;
+        else cc = v - 273.15;
+        if(t === '°C') r = cc;
+        else if(t === '°F') r = cc * 9/5 + 32;
+        else r = cc + 273.15;
+      } else {
+        r = (v * u.u[from.value]) / u.u[to.value];
+      }
+      res.textContent = fmt(r) + ' ' + to.value;
+      res.classList.remove('error');
+    } catch(e){
+      res.textContent = 'خطأ';
+      res.classList.add('error');
+    }
+  }
+
+  cat.onchange = fillUnits;
+  from.onchange = calc;
+  to.onchange = calc;
+  val.oninput = calc;
+  fillUnits();
+};
+
+/* --- Tool 2: Age --- */
+RENDERERS.age = function(c){
+  var today = new Date().toISOString().slice(0,10);
+  c.innerHTML =
+    '<div class="card">' +
+      '<h3><span class="h-ic">🎂</span> العمر بالتفصيل</h3>' +
+      '<div class="field"><label>تاريخ الميلاد</label><input type="date" id="birth" /></div>' +
+      '<button class="btn-primary" id="calcBtn">احسب العمر</button>' +
+      '<div id="ageRes"></div>' +
+    '</div>' +
+    '<div class="card">' +
+      '<h3><span class="h-ic">📅</span> الفرق بين تاريخين</h3>' +
+      '<div class="field-row">' +
+        '<div class="field"><label>من</label><input type="date" id="d1" value="' + today + '" /></div>' +
+        '<div class="field"><label>إلى</label><input type="date" id="d2" value="' + today + '" /></div>' +
+      '</div>' +
+      '<button class="btn-primary" id="diffBtn">احسب الفرق</button>' +
+      '<div id="diffRes"></div>' +
+    '</div>';
+
+  c.querySelector('#calcBtn').onclick = function(){
+    var b = c.querySelector('#birth').value;
+    if(!b){ toast('أدخل تاريخ الميلاد'); return; }
+    var birth = new Date(b);
+    var now = new Date();
+    if(birth > now){ toast('التاريخ في المستقبل'); return; }
+    var y = now.getFullYear() - birth.getFullYear();
+    var m = now.getMonth() - birth.getMonth();
+    var d = now.getDate() - birth.getDate();
+    if(d < 0){ m--; d += new Date(now.getFullYear(), now.getMonth(), 0).getDate(); }
+    if(m < 0){ y--; m += 12; }
+    var totalDays = Math.floor((now - birth) / 86400000);
+    var totalHours = totalDays * 24;
+    var totalMin = totalHours * 60;
+    var nextBd = new Date(now.getFullYear(), birth.getMonth(), birth.getDate());
+    if(nextBd < now) nextBd.setFullYear(now.getFullYear() + 1);
+    var daysToBd = Math.ceil((nextBd - now) / 86400000);
+    c.querySelector('#ageRes').innerHTML =
+      '<div class="result-box" style="font-size:20px">' + y + ' سنة، ' + m + ' شهر، ' + d + ' يوم</div>' +
+      '<div class="stat-grid">' +
+        '<div class="stat-item"><div class="stat-val">' + totalDays.toLocaleString() + '</div><div class="stat-lab">إجمالي الأيام</div></div>' +
+        '<div class="stat-item"><div class="stat-val">' + totalHours.toLocaleString() + '</div><div class="stat-lab">إجمالي الساعات</div></div>' +
+        '<div class="stat-item"><div class="stat-val">' + totalMin.toLocaleString() + '</div><div class="stat-lab">إجمالي الدقائق</div></div>' +
+        '<div class="stat-item"><div class="stat-val">' + daysToBd + '</div><div class="stat-lab">يوم للعيد القادم</div></div>' +
+      '</div>';
+  };
+  c.querySelector('#diffBtn').onclick = function(){
+    var d1 = new Date(c.querySelector('#d1').value);
+    var d2 = new Date(c.querySelector('#d2').value);
+    if(isNaN(d1) || isNaN(d2)){ toast('أدخل تاريخين'); return; }
+    var diff = Math.abs(d2 - d1);
+    var days = Math.floor(diff / 86400000);
+    var weeks = Math.floor(days / 7);
+    var months = Math.abs((d2.getFullYear() - d1.getFullYear()) * 12 + (d2.getMonth() - d1.getMonth()));
+    c.querySelector('#diffRes').innerHTML =
+      '<div class="result-box">' + days.toLocaleString() + ' يوم</div>' +
+      '<div class="stat-grid">' +
+        '<div class="stat-item"><div class="stat-val">' + weeks + '</div><div class="stat-lab">أسبوع</div></div>' +
+        '<div class="stat-item"><div class="stat-val">' + months + '</div><div class="stat-lab">شهر تقريبي</div></div>' +
+      '</div>';
+  };
+};
+
+/* --- Tool 3: Finance --- */
+RENDERERS.finance = function(c){
+  c.innerHTML =
+    '<div class="card">' +
+      '<h3><span class="h-ic">💰</span> القسط الشهري (EMI)</h3>' +
+      '<div class="field"><label>مبلغ القرض</label><input type="number" id="loanAmt" placeholder="100000" /></div>' +
+      '<div class="field"><label>معدل الفائدة السنوي %</label><input type="number" id="loanRate" placeholder="5" step="0.01" /></div>' +
+      '<div class="field"><label>عدد الأشهر</label><input type="number" id="loanMonths" placeholder="60" /></div>' +
+      '<button class="btn-primary" id="emiBtn">احسب القسط</button>' +
+      '<div id="emiRes"></div>' +
+    '</div>' +
+    '<div class="card">' +
+      '<h3><span class="h-ic">📈</span> الفائدة البسيطة والمركبة</h3>' +
+      '<div class="field"><label>رأس المال</label><input type="number" id="pAmt" placeholder="10000" /></div>' +
+      '<div class="field"><label>المعدل السنوي %</label><input type="number" id="pRate" placeholder="5" step="0.01" /></div>' +
+      '<div class="field"><label>عدد السنوات</label><input type="number" id="pYears" placeholder="5" /></div>' +
+      '<button class="btn-primary" id="intBtn">احسب</button>' +
+      '<div id="intRes"></div>' +
+    '</div>' +
+    '<div class="card">' +
+      '<h3><span class="h-ic">🕌</span> حاسبة الزكاة</h3>' +
+      '<div class="field"><label>المبلغ</label><input type="number" id="zAmt" placeholder="100000" /></div>' +
+      '<button class="btn-primary" id="zBtn">احسب الزكاة (2.5%)</button>' +
+      '<div id="zRes"></div>' +
+    '</div>';
+
+  c.querySelector('#emiBtn').onclick = function(){
+    var P = parseFloat(c.querySelector('#loanAmt').value);
+    var r = parseFloat(c.querySelector('#loanRate').value) / 100 / 12;
+    var n = parseInt(c.querySelector('#loanMonths').value);
+    if(!P || !n || isNaN(r)){ toast('أدخل القيم'); return; }
+    var emi = r === 0 ? P/n : (P * r * Math.pow(1+r, n)) / (Math.pow(1+r, n) - 1);
+    var total = emi * n;
+    var interest = total - P;
+    c.querySelector('#emiRes').innerHTML =
+      '<div class="result-box" style="font-size:22px">' + fmt(emi, 2) + ' / شهر</div>' +
+      '<div class="info-list">' +
+        '<div class="info-row"><span class="k">إجمالي الدفع</span><span class="v">' + fmt(total, 2) + '</span></div>' +
+        '<div class="info-row"><span class="k">إجمالي الفائدة</span><span class="v">' + fmt(interest, 2) + '</span></div>' +
+      '</div>';
+  };
+  c.querySelector('#intBtn').onclick = function(){
+    var P = parseFloat(c.querySelector('#pAmt').value);
+    var r = parseFloat(c.querySelector('#pRate').value) / 100;
+    var t = parseFloat(c.querySelector('#pYears').value);
+    if(!P || !t){ toast('أدخل القيم'); return; }
+    var simple = P * (1 + r*t);
+    var compound = P * Math.pow(1 + r, t);
+    c.querySelector('#intRes').innerHTML =
+      '<div class="info-list">' +
+        '<div class="info-row"><span class="k">الفائدة البسيطة</span><span class="v">' + fmt(simple, 2) + '</span></div>' +
+        '<div class="info-row"><span class="k">الفائدة المركبة</span><span class="v">' + fmt(compound, 2) + '</span></div>' +
+        '<div class="info-row"><span class="k">الفرق</span><span class="v">' + fmt(compound - simple, 2) + '</span></div>' +
+      '</div>';
+  };
+  c.querySelector('#zBtn').onclick = function(){
+    var a = parseFloat(c.querySelector('#zAmt').value);
+    if(!a){ toast('أدخل المبلغ'); return; }
+    c.querySelector('#zRes').innerHTML =
+      '<div class="result-box">' + fmt(a * 0.025, 2) + '</div>' +
+      '<div class="result-label">الزكاة الواجبة (2.5%)</div>';
+  };
+};
+
+/* --- Tool 4: BMI --- */
+RENDERERS.bmi = function(c){
+  c.innerHTML =
+    '<div class="card">' +
+      '<h3><span class="h-ic">⚖️</span> مؤشر كتلة الجسم</h3>' +
+      '<div class="field"><label>الوزن (كجم)</label><input type="number" id="w" placeholder="70" step="0.1" /></div>' +
+      '<div class="field"><label>الطول (سم)</label><input type="number" id="h" placeholder="175" step="0.1" /></div>' +
+      '<button class="btn-primary" id="btn">احسب</button>' +
+      '<div id="res"></div>' +
+    '</div>';
+  c.querySelector('#btn').onclick = function(){
+    var w = parseFloat(c.querySelector('#w').value);
+    var h = parseFloat(c.querySelector('#h').value) / 100;
+    if(!w || !h){ toast('أدخل القيم'); return; }
+    var bmi = w / (h*h);
+    var cat, color;
+    if(bmi < 18.5){ cat = 'نقص في الوزن'; color = '#F59E0B'; }
+    else if(bmi < 25){ cat = 'وزن طبيعي'; color = '#10B981'; }
+    else if(bmi < 30){ cat = 'زيادة في الوزن'; color = '#F59E0B'; }
+    else { cat = 'سمنة'; color = '#EF4444'; }
+    var minW = 18.5 * h * h;
+    var maxW = 24.9 * h * h;
+    c.querySelector('#res').innerHTML =
+      '<div class="result-box" style="background:linear-gradient(135deg,' + color + ',' + color + 'CC);color:#fff;font-size:28px">' + bmi.toFixed(1) + '</div>' +
+      '<div class="result-label" style="color:' + color + ';font-size:14px;font-weight:900">' + cat + '</div>' +
+      '<div class="info-list">' +
+        '<div class="info-row"><span class="k">الوزن المثالي</span><span class="v">' + minW.toFixed(1) + ' - ' + maxW.toFixed(1) + ' كجم</span></div>' +
+      '</div>';
+  };
+};
+
+/* --- Tool 5: Currency --- */
+var CURR_KEY = 'ye_tools_rates';
+function getRates(){
+  try{
+    var r = JSON.parse(localStorage.getItem(CURR_KEY));
+    return r || { USD: 1, EGP: 49, SAR: 3.75, AED: 3.67, EUR: 0.92, GBP: 0.79, KWD: 0.31 };
+  } catch(e){
+    return { USD: 1, EGP: 49, SAR: 3.75, AED: 3.67, EUR: 0.92, GBP: 0.79, KWD: 0.31 };
+  }
+}
+function saveRates(r){ try{ localStorage.setItem(CURR_KEY, JSON.stringify(r)); }catch(e){} }
+
+RENDERERS.currency = function(c){
+  var rates = getRates();
+  c.innerHTML =
+    '<div class="card">' +
+      '<h3><span class="h-ic">💱</span> محوّل العملات</h3>' +
+      '<p style="font-size:11px;color:var(--muted);margin-bottom:14px">الأسعار مقابل 1 USD</p>' +
+      '<div class="field-row">' +
+        '<div class="field"><label>من</label><select id="cFrom"></select></div>' +
+        '<div class="field"><label>إلى</label><select id="cTo"></select></div>' +
+      '</div>' +
+      '<div class="field"><label>القيمة</label><input type="number" id="cVal" placeholder="1" step="any" inputmode="decimal" /></div>' +
+      '<div class="result-box" id="cRes">0</div>' +
+    '</div>' +
+    '<div class="card">' +
+      '<h3><span class="h-ic">⚙</span> تعديل الأسعار</h3>' +
+      '<div id="rateInputs"></div>' +
+      '<button class="btn-primary" id="saveRates" style="margin-top:12px">حفظ الأسعار</button>' +
+    '</div>';
+
+  var from = c.querySelector('#cFrom'), to = c.querySelector('#cTo');
+  var ks = Object.keys(rates);
+  for(var i = 0; i < ks.length; i++){
+    var a = document.createElement('option'); a.value = ks[i]; a.textContent = ks[i];
+    var b = document.createElement('option'); b.value = ks[i]; b.textContent = ks[i];
+    from.appendChild(a); to.appendChild(b);
+  }
+  if(to.options.length > 1) to.selectedIndex = 1;
+
+  function calc(){
+    var v = parseFloat(c.querySelector('#cVal').value);
+    if(isNaN(v)){ c.querySelector('#cRes').textContent = '0'; return; }
+    var r = getRates();
+    var result = (v / r[from.value]) * r[to.value];
+    c.querySelector('#cRes').textContent = fmt(result, 4) + ' ' + to.value;
+  }
+  from.onchange = calc; to.onchange = calc;
+  c.querySelector('#cVal').oninput = calc;
+
+  var ri = c.querySelector('#rateInputs');
+  var entries = Object.entries(rates);
+  for(var j = 0; j < entries.length; j++){
+    var k = entries[j][0], v = entries[j][1];
+    var row = document.createElement('div');
+    row.className = 'field';
+    row.innerHTML = '<label>' + k + ' (لكل 1 USD)</label><input type="number" step="0.0001" data-curr="' + k + '" value="' + v + '" />';
+    ri.appendChild(row);
+  }
+  c.querySelector('#saveRates').onclick = function(){
+    var newRates = {};
+    var inputs = ri.querySelectorAll('input[data-curr]');
+    for(var n = 0; n < inputs.length; n++){
+      newRates[inputs[n].dataset.curr] = parseFloat(inputs[n].value) || 1;
+    }
+    saveRates(newRates);
+    toast('تم حفظ الأسعار');
+    calc();
+  };
+  calc();
+};
+
+/* --- Tool 6: Password --- */
+RENDERERS.password = function(c){
+  c.innerHTML =
+    '<div class="card">' +
+      '<h3><span class="h-ic">🔐</span> مولّد كلمات السر</h3>' +
+      '<div class="field"><label>الطول</label><input type="number" id="pLen" value="16" min="4" max="128" /></div>' +
+      '<div class="field"><label>الأنواع</label>' +
+        '<div class="radio-group">' +
+          '<label><input type="checkbox" id="pUp" checked><span>ABC</span></label>' +
+          '<label><input type="checkbox" id="pLow" checked><span>abc</span></label>' +
+          '<label><input type="checkbox" id="pDig" checked><span>123</span></label>' +
+          '<label><input type="checkbox" id="pSym" checked><span>!@#</span></label>' +
+        '</div>' +
+      '</div>' +
+      '<button class="btn-primary" id="pGen">توليد</button>' +
+      '<div class="password-output">' +
+        '<input type="text" id="pOut" readonly />' +
+        '<button class="copy-btn" id="pCopy">📋</button>' +
+      '</div>' +
+    '</div>';
+
+  function gen(){
+    var len = Math.max(4, Math.min(128, parseInt(c.querySelector('#pLen').value) || 16));
+    var chars = '';
+    if(c.querySelector('#pUp').checked) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    if(c.querySelector('#pLow').checked) chars += 'abcdefghijklmnopqrstuvwxyz';
+    if(c.querySelector('#pDig').checked) chars += '0123456789';
+    if(c.querySelector('#pSym').checked) chars += '!@#$%^&*()-_=+[]{};:,.<>?/~';
+    if(!chars){ toast('اختر نوعًا'); return; }
+    var pwd = '';
+    var arr = new Uint32Array(len);
+    if(window.crypto && crypto.getRandomValues) crypto.getRandomValues(arr);
+    else for(var i = 0; i < len; i++) arr[i] = Math.floor(Math.random() * 0xFFFFFFFF);
+    for(var k = 0; k < len; k++) pwd += chars[arr[k] % chars.length];
+    c.querySelector('#pOut').value = pwd;
+  }
+
+  c.querySelector('#pGen').onclick = gen;
+  c.querySelector('#pCopy').onclick = function(){
+    var v = c.querySelector('#pOut').value;
+    if(!v) return;
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(v).then(function(){ toast('تم النسخ'); }).catch(function(){ toast('فشل'); });
+    } else {
+      var inp = c.querySelector('#pOut');
+      inp.select();
+      document.execCommand('copy');
+      toast('تم النسخ');
+    }
+  };
+  gen();
+};
+
+/* --- Tool 7: QR --- */
+RENDERERS.qr = function(c){
+  c.innerHTML =
+    '<div class="card">' +
+      '<h3><span class="h-ic">📱</span> توليد QR Code</h3>' +
+      '<div class="field"><label>النص أو الرابط</label><textarea id="qrText">https://kwtsh2000-hash.github.io/CalculatorYe/</textarea></div>' +
+      '<button class="btn-primary" id="qrGen">توليد</button>' +
+      '<div id="qrResult" style="margin-top:14px"></div>' +
+      '<div class="result-label" style="margin-top:10px">ملاحظة: يحتاج إنترنت لعرض الصورة</div>' +
+    '</div>';
+  c.querySelector('#qrGen').onclick = function(){
+    var t = c.querySelector('#qrText').value.trim();
+    if(!t){ toast('أدخل نصًا'); return; }
+    var url = 'https://api.qrserver.com/v1/create-qr-code/?size=280x280&data=' + encodeURIComponent(t);
+    c.querySelector('#qrResult').innerHTML =
+      '<div class="qr-wrap"><img src="' + url + '" alt="QR" /></div>' +
+      '<div style="text-align:center;margin-top:12px">' +
+        '<a href="' + url + '" download="qr.png" class="btn-secondary" style="text-decoration:none;display:inline-block">⬇️ تحميل</a>' +
+      '</div>';
+  };
+  c.querySelector('#qrGen').click();
+};
+
+/* --- Tool 8: Random --- */
+RENDERERS.random = function(c){
+  c.innerHTML =
+    '<div class="card">' +
+      '<h3><span class="h-ic">🎲</span> مولّد الأرقام</h3>' +
+      '<div class="field-row">' +
+        '<div class="field"><label>من</label><input type="number" id="rMin" value="1" /></div>' +
+        '<div class="field"><label>إلى</label><input type="number" id="rMax" value="100" /></div>' +
+      '</div>' +
+      '<div class="field"><label>العدد</label><input type="number" id="rCount" value="1" min="1" max="100" /></div>' +
+      '<div class="field"><label>خيارات</label>' +
+        '<div class="radio-group">' +
+          '<label><input type="checkbox" id="rUnique"><span>بدون تكرار</span></label>' +
+        '</div>' +
+      '</div>' +
+      '<button class="btn-primary" id="rGen">توليد</button>' +
+      '<div class="result-box" id="rRes" style="font-size:16px;flex-wrap:wrap;gap:8px;min-height:80px">—</div>' +
+    '</div>';
+  c.querySelector('#rGen').onclick = function(){
+    var min = parseInt(c.querySelector('#rMin').value) || 0;
+    var max = parseInt(c.querySelector('#rMax').value) || 100;
+    var count = Math.min(100, Math.max(1, parseInt(c.querySelector('#rCount').value) || 1));
+    var unique = c.querySelector('#rUnique').checked;
+    if(min > max){ toast('النطاق غير صالح'); return; }
+    if(unique && (max - min + 1) < count){ toast('النطاق صغير'); return; }
+    var results = [];
+    if(unique){
+      var pool = [];
+      for(var i = min; i <= max; i++) pool.push(i);
+      for(var k = 0; k < count; k++){
+        var idx = Math.floor(Math.random() * pool.length);
+        results.push(pool.splice(idx, 1)[0]);
+      }
+    } else {
+      for(var j = 0; j < count; j++){
+        results.push(Math.floor(Math.random() * (max - min + 1)) + min);
+      }
+    }
+    var html = '';
+    for(var n = 0; n < results.length; n++){
+      html += '<span style="display:inline-block;padding:10px 16px;background:var(--surface-solid);border-radius:12px;font-weight:900;border:1px solid var(--border);font-family:monospace">' + results[n] + '</span>';
+    }
+    c.querySelector('#rRes').innerHTML = html;
+  };
+};
+
+/* --- Tool 9: Word Count --- */
+RENDERERS.wordcount = function(c){
+  c.innerHTML =
+    '<div class="card">' +
+      '<h3><span class="h-ic">📝</span> عدّاد الكلمات</h3>' +
+      '<div class="field"><label>النص</label><textarea id="wcText" placeholder="اكتب أو الصق النص..." style="min-height:200px"></textarea></div>' +
+      '<div id="wcRes"></div>' +
+    '</div>';
+  function count(){
+    var t = c.querySelector('#wcText').value;
+    var words = t.trim() ? t.trim().split(/\s+/).length : 0;
+    var chars = t.length;
+    var charsNoSpaces = t.replace(/\s/g, '').length;
+    var sentences = (t.match(/[.!?؟。]+/g) || []).length || (t.trim() ? 1 : 0);
+    var paragraphs = t.split(/\n\s*\n/).filter(function(x){ return x.trim(); }).length;
+    var lines = t.split('\n').length;
+    var readMin = Math.ceil(words / 200);
+    c.querySelector('#wcRes').innerHTML =
+      '<div class="stat-grid">' +
+        '<div class="stat-item"><div class="stat-val">' + words + '</div><div class="stat-lab">كلمة</div></div>' +
+        '<div class="stat-item"><div class="stat-val">' + chars + '</div><div class="stat-lab">حرف</div></div>' +
+        '<div class="stat-item"><div class="stat-val">' + charsNoSpaces + '</div><div class="stat-lab">بدون مسافات</div></div>' +
+        '<div class="stat-item"><div class="stat-val">' + sentences + '</div><div class="stat-lab">جملة</div></div>' +
+        '<div class="stat-item"><div class="stat-val">' + paragraphs + '</div><div class="stat-lab">فقرة</div></div>' +
+        '<div class="stat-item"><div class="stat-val">' + readMin + '</div><div class="stat-lab">دقيقة قراءة</div></div>' +
+      '</div>';
+  }
+  c.querySelector('#wcText').oninput = count;
+  count();
+};
+
+/* --- Tool 10: Calories --- */
+RENDERERS.calories = function(c){
+  c.innerHTML =
+    '<div class="card">' +
+      '<h3><span class="h-ic">🍎</span> حاسبة السعرات اليومية</h3>' +
+      '<div class="field"><label>الجنس</label>' +
+        '<div class="radio-group">' +
+          '<label><input type="radio" name="gender" value="male" checked><span>ذكر</span></label>' +
+          '<label><input type="radio" name="gender" value="female"><span>أنثى</span></label>' +
+        '</div>' +
+      '</div>' +
+      '<div class="field-row">' +
+        '<div class="field"><label>العمر</label><input type="number" id="calAge" placeholder="30" /></div>' +
+        '<div class="field"><label>الوزن (كجم)</label><input type="number" id="calW" placeholder="70" step="0.1" /></div>' +
+      '</div>' +
+      '<div class="field"><label>الطول (سم)</label><input type="number" id="calH" placeholder="175" step="0.1" /></div>' +
+      '<div class="field"><label>مستوى النشاط</label>' +
+        '<select id="calActivity">' +
+          '<option value="1.2">قليل الحركة</option>' +
+          '<option value="1.375">نشاط خفيف</option>' +
+          '<option value="1.55" selected>نشاط متوسط</option>' +
+          '<option value="1.725">نشاط عالي</option>' +
+          '<option value="1.9">نشاط شديد</option>' +
+        '</select>' +
+      '</div>' +
+      '<button class="btn-primary" id="calBtn">احسب</button>' +
+      '<div id="calRes"></div>' +
+    '</div>';
+  c.querySelector('#calBtn').onclick = function(){
+    var gender = c.querySelector('input[name="gender"]:checked').value;
+    var age = parseFloat(c.querySelector('#calAge').value);
+    var w = parseFloat(c.querySelector('#calW').value);
+    var h = parseFloat(c.querySelector('#calH').value);
+    var act = parseFloat(c.querySelector('#calActivity').value);
+    if(!age || !w || !h){ toast('أدخل كل القيم'); return; }
+    var bmr = gender === 'male'
+      ? 10 * w + 6.25 * h - 5 * age + 5
+      : 10 * w + 6.25 * h - 5 * age - 161;
+    var tdee = bmr * act;
+    c.querySelector('#calRes').innerHTML =
+      '<div class="result-box" style="font-size:24px">' + Math.round(tdee) + ' سعرة / يوم</div>' +
+      '<div class="info-list">' +
+        '<div class="info-row"><span class="k">BMR</span><span class="v">' + Math.round(bmr) + '</span></div>' +
+        '<div class="info-row"><span class="k">TDEE</span><span class="v">' + Math.round(tdee) + '</span></div>' +
+        '<div class="info-row"><span class="k">🔻 إنقاص وزن</span><span class="v">' + Math.round(tdee - 500) + '</span></div>' +
+        '<div class="info-row"><span class="k">🔺 زيادة وزن</span><span class="v">' + Math.round(tdee + 500) + '</span></div>' +
+      '</div>';
+  };
+};
+
+/* --- Tool 11: Base --- */
+RENDERERS.base = function(c){
+  c.innerHTML =
+    '<div class="card">' +
+      '<h3><span class="h-ic">💯</span> محوّل الأنظمة الرقمية</h3>' +
+      '<div class="field"><label>النظام المُدخل</label>' +
+        '<div class="radio-group">' +
+          '<label><input type="radio" name="baseFrom" value="2" checked><span>ثنائي</span></label>' +
+          '<label><input type="radio" name="baseFrom" value="8"><span>ثماني</span></label>' +
+          '<label><input type="radio" name="baseFrom" value="10"><span>عشري</span></label>' +
+          '<label><input type="radio" name="baseFrom" value="16"><span>سداسي</span></label>' +
+        '</div>' +
+      '</div>' +
+      '<div class="field"><label>الرقم</label><input type="text" id="bInput" placeholder="1010" style="direction:ltr;text-align:center;font-family:monospace;font-size:18px;font-weight:800" /></div>' +
+      '<div id="bRes" style="margin-top:12px"></div>' +
+    '</div>';
+  function conv(){
+    var from = parseInt(c.querySelector('input[name="baseFrom"]:checked').value);
+    var raw = c.querySelector('#bInput').value.trim();
+    if(!raw){ c.querySelector('#bRes').innerHTML = ''; return; }
+    var dec = parseInt(raw, from);
+    if(isNaN(dec)){ c.querySelector('#bRes').innerHTML = '<div class="result-box error">رقم غير صالح</div>'; return; }
+    c.querySelector('#bRes').innerHTML =
+      '<div class="info-list">' +
+        '<div class="info-row"><span class="k">ثنائي</span><span class="v">' + dec.toString(2) + '</span></div>' +
+        '<div class="info-row"><span class="k">ثماني</span><span class="v">' + dec.toString(8) + '</span></div>' +
+        '<div class="info-row"><span class="k">عشري</span><span class="v">' + dec.toString(10) + '</span></div>' +
+        '<div class="info-row"><span class="k">سداسي</span><span class="v">' + dec.toString(16).toUpperCase() + '</span></div>' +
+      '</div>';
+  }
+  c.querySelector('#bInput').oninput = conv;
+  var radios = c.querySelectorAll('input[name="baseFrom"]');
+  for(var i = 0; i < radios.length; i++) radios[i].onchange = conv;
+};
+
+/* --- Tool 12: Cooking --- */
+var COOK_UNITS = {
+  'كوب (240 مل)': 240,
+  'نصف كوب (120 مل)': 120,
+  'ربع كوب (60 مل)': 60,
+  'ملعقة طعام (15 مل)': 15,
+  'ملعقة صغيرة (5 مل)': 5,
+  'ملليلتر (ml)': 1,
+  'لتر (L)': 1000,
+  'أونصة سائلة (fl oz)': 29.5735
+};
+
+RENDERERS.cooking = function(c){
+  c.innerHTML =
+    '<div class="card">' +
+      '<h3><span class="h-ic">🍳</span> تحويل وحدات الطبخ</h3>' +
+      '<div class="field-row">' +
+        '<div class="field"><label>من</label><select id="kFrom"></select></div>' +
+        '<div class="field"><label>إلى</label><select id="kTo"></select></div>' +
+      '</div>' +
+      '<div class="field"><label>القيمة</label><input type="number" id="kVal" placeholder="1" step="any" inputmode="decimal" /></div>' +
+      '<div class="result-box" id="kRes">0</div>' +
+    '</div>' +
+    '<div class="card">' +
+      '<h3><span class="h-ic">📏</span> ضبط حجم الوصفة</h3>' +
+      '<div class="field"><label>حجم الوصفة الأصلي (حصص)</label><input type="number" id="rOrig" placeholder="4" /></div>' +
+      '<div class="field"><label>الحجم المطلوب (حصص)</label><input type="number" id="rNew" placeholder="6" /></div>' +
+      '<div class="field"><label>المكوّن (اختياري)</label><input type="text" id="rIng" placeholder="كوب دقيق" /></div>' +
+      '<div class="field"><label>الكمية</label><input type="number" id="rAmt" placeholder="2" step="any" /></div>' +
+      '<button class="btn-primary" id="rBtn">احسب</button>' +
+      '<div id="rRes"></div>' +
+    '</div>';
+
+  var from = c.querySelector('#kFrom'), to = c.querySelector('#kTo');
+  var ks = Object.keys(COOK_UNITS);
+  for(var i = 0; i < ks.length; i++){
+    var a = document.createElement('option'); a.value = ks[i]; a.textContent = ks[i];
+    var b = document.createElement('option'); b.value = ks[i]; b.textContent = ks[i];
+    from.appendChild(a); to.appendChild(b);
+  }
+  if(to.options.length > 5) to.selectedIndex = 5;
+
+  function calc(){
+    var v = parseFloat(c.querySelector('#kVal').value);
+    if(isNaN(v)){ c.querySelector('#kRes').textContent = '0'; return; }
+    var r = (v * COOK_UNITS[from.value]) / COOK_UNITS[to.value];
+    c.querySelector('#kRes').textContent = fmt(r, 3) + ' ' + to.value;
+  }
+  from.onchange = calc; to.onchange = calc;
+  c.querySelector('#kVal').oninput = calc;
+
+  c.querySelector('#rBtn').onclick = function(){
+    var orig = parseFloat(c.querySelector('#rOrig').value);
+    var nw = parseFloat(c.querySelector('#rNew').value);
+    var amt = parseFloat(c.querySelector('#rAmt').value);
+    var ing = c.querySelector('#rIng').value.trim();
+    if(!orig || !nw || isNaN(amt)){ toast('أدخل القيم'); return; }
+    var ratio = nw / orig;
+    var result = amt * ratio;
+    c.querySelector('#rRes').innerHTML =
+      '<div class="result-box" style="font-size:22px">' + fmt(result, 3) + (ing ? ' ' + esc(ing) : '') + '</div>' +
+      '<div class="result-label">المعامل ×' + ratio.toFixed(2) + '</div>';
+  };
+};
+
+/* ============================================================
+   EXPOSE + INIT
+============================================================ */
+window.goHome = goHome;
+window.openTool = openTool;
+
+document.getElementById('themeBtn').onclick = function(){
+  setTheme(getTheme() === 'dark' ? 'light' : 'dark');
+};
+setTheme(getTheme());
+
+renderHome();
+</script>
+</body>
+</html>
