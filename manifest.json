@@ -1,31 +1,30 @@
 {
   "name": "Y♥E Calculator",
   "short_name": "Y♥E Calc",
-  "description": "حاسبة شاملة تعمل أوفلاين: أساسية، علمية، فيزياء، تحويل وحدات",
+  "description": "حاسبة شاملة تعمل أوفلاين",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "orientation": "portrait-primary",
-  "background_color": "#6C5CE7",
-  "theme_color": "#6C5CE7",
+  "orientation": "portrait",
+  "background_color": "#F5E6D3",
+  "theme_color": "#C9A961",
   "lang": "ar",
   "dir": "rtl",
-  "categories": ["utilities", "productivity", "education"],
   "icons": [
     {
-      "src": "icon-192.png",
+      "src": "./icon.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icon-512.png",
+      "src": "./icon.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icon-512.png",
+      "src": "./icon.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
