@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ye-calc-v9';
+const CACHE_NAME = 'ye-calc-v10';
 const ASSETS = [
   './',
   './index.html',
