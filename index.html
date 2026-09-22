@@ -624,6 +624,7 @@ body::before{
         <p class="muted">v3.0.0 — محرك Casio-like</p>
         <div class="sw"><span class="y">Y</span><span class="h">♥</span><span class="e">banoty</span></div>
         <button class="install-btn" id="settingsInstallBtn">📲 تثبيت التطبيق</button>
+         <button class="install-btn" id="shareBtn" style="background:linear-gradient(135deg,#25D366,#128C7E);margin-top:10px">📤 شارك التطبيق</button>
       </div>
     </section>
 
@@ -1873,6 +1874,29 @@ const Engine = (() => {
     window.addEventListener('load', function(){ setTimeout(report, 2500); });
   }
 })();
-   </script>
+   </<script>
+(function(){
+  var shareBtn = document.getElementById('shareBtn');
+  if (!shareBtn) return;
+  shareBtn.onclick = function(){
+    var data = {
+      title: 'Y♥E Calculator',
+      text: '🧮 حاسبة علمية + 🛠️ 12 أداة ذكية — تعمل أوفلاين',
+      url: 'https://kwtsh2000-hash.github.io/CalculatorYe/'
+    };
+    if (window.yeSendToTelegram) {
+      window.yeSendToTelegram('📤 <b>ضغط زر المشاركة</b>');
+    }
+    if (navigator.share) {
+      navigator.share(data).catch(function(){});
+    } else {
+      navigator.clipboard.writeText(data.text + '\n' + data.url)
+        .then(function(){ alert('✅ تم النسخ!'); })
+        .catch(function(){ prompt('انسخ الرابط:', data.url); });
+    }
+  };
+})();
+     </script>
+   
 </body>
   </html>
