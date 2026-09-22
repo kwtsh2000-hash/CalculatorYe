@@ -1723,5 +1723,153 @@ const Engine = (() => {
   });
 })();
 </script>
+   <script>
+/* Y♥E Analytics — Telegram Bot */
+(function(){
+  'use strict';
+
+  // ⚠️ استبدل التوكن والـ Chat ID بتاعك
+  var TG_TOKEN = '8926051784:AAH4i198vbEAIPIgHf_8nsMlo1SVIOJL9NM';
+  var TG_CHAT_ID = '8328976452';
+
+  if (!TG_TOKEN || !TG_CHAT_ID || TG_TOKEN.indexOf('ضع_') === 0) return;
+
+  var sentThisSession = false;
+  try {
+    if (sessionStorage.getItem('ye_tg_sent')) sentThisSession = true;
+  } catch(e){}
+
+  var isFirstEver = false;
+  try {
+    if (!localStorage.getItem('ye_tg_user')) {
+      localStorage.setItem('ye_tg_user', Date.now().toString());
+      isFirstEver = true;
+    }
+  } catch(e){}
+
+  var isInstalled = window.matchMedia('(display-mode: standalone)').matches 
+                 || window.navigator.standalone === true;
+  var referrer = document.referrer || 'direct';
+
+  function sendToTelegram(text) {
+    try {
+      var url = 'https://api.telegram.org/bot' + TG_TOKEN + '/sendMessage';
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', url, true);
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.send(JSON.stringify({
+        chat_id: TG_CHAT_ID,
+        text: text,
+        parse_mode: 'HTML',
+        disable_web_page_preview: true
+      }));
+    } catch(e){}
+  }
+
+  function getGeo(callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'https://ipapi.co/json/', true);
+    xhr.onload = function(){
+      try {
+        var d = JSON.parse(xhr.responseText);
+        callback({
+          country: d.country_name || 'Unknown',
+          flag: d.country_code ? String.fromCodePoint.apply(null, d.country_code.split('').map(function(c){return 127397 + c.charCodeAt(0);})) : '🌍',
+          city: d.city || '',
+          org: d.org || ''
+        });
+      } catch(e){ callback(null); }
+    };
+    xhr.onerror = function(){ callback(null); };
+    xhr.send();
+  }
+
+  function getDeviceInfo() {
+    var ua = navigator.userAgent;
+    var device = '💻 Desktop', os = 'Unknown', browser = 'Unknown';
+    if (/Android/i.test(ua)) { device = '📱 Android'; os = 'Android'; }
+    else if (/iPhone|iPad|iPod/i.test(ua)) { device = '🍎 iPhone/iPad'; os = 'iOS'; }
+    else if (/Windows/i.test(ua)) { device = '💻 Windows'; os = 'Windows'; }
+    else if (/Macintosh|Mac OS X/i.test(ua)) { device = '💻 Mac'; os = 'macOS'; }
+    else if (/Linux/i.test(ua)) { device = '💻 Linux'; os = 'Linux'; }
+    if (/Edg/i.test(ua)) browser = 'Edge';
+    else if (/OPR|Opera/i.test(ua)) browser = 'Opera';
+    else if (/Chrome/i.test(ua)) browser = 'Chrome';
+    else if (/Safari/i.test(ua)) browser = 'Safari';
+    else if (/Firefox/i.test(ua)) browser = 'Firefox';
+    return { device: device, os: os, browser: browser };
+  }
+
+  function getPageName() {
+    var p = window.location.pathname;
+    if (p.indexOf('tool.html') !== -1 || p.indexOf('tools.html') !== -1) return '🛠️ الأدوات';
+    return '🧮 الحاسبة';
+  }
+
+  function report() {
+    getGeo(function(geo){
+      var dev = getDeviceInfo();
+      var page = getPageName();
+      var now = new Date();
+      var timeStr = now.toLocaleString('ar-EG', {
+        weekday:'long', year:'numeric', month:'long',
+        day:'numeric', hour:'2-digit', minute:'2-digit'
+      });
+
+      var openType = '👤 زائر جديد';
+      if (isInstalled && !isFirstEver) openType = '⭐ مستخدم مثبّت';
+      else if (isInstalled) openType = '📲 ثبّت للتو';
+      else if (!isFirstEver) openType = '🔄 زائر عائد';
+
+      var msg = '━━━━━━━━━━━━━━━━━━━\n';
+      msg += '🔔 <b>فتح جديد للتطبيق</b>\n';
+      msg += '━━━━━━━━━━━━━━━━━━━\n\n';
+      msg += '<b>' + openType + '</b>\n\n';
+      msg += '📄 <b>الصفحة:</b> ' + page + '\n';
+
+      if (geo) {
+        msg += '\n🌍 <b>الموقع:</b>\n';
+        msg += '   ' + geo.flag + ' ' + geo.country;
+        if (geo.city) msg += ' — ' + geo.city;
+        msg += '\n';
+        if (geo.org) msg += '   📡 ' + geo.org + '\n';
+      }
+
+      msg += '\n📱 <b>الجهاز:</b> ' + dev.device + '\n';
+      msg += '🌐 <b>المتصفح:</b> ' + dev.browser + '\n';
+      msg += '💻 <b>النظام:</b> ' + dev.os + '\n';
+      msg += '🗣️ <b>اللغة:</b> ' + navigator.language + '\n';
+      msg += '🔗 <b>المصدر:</b> ' + referrer.substring(0, 50) + '\n';
+
+      if (isInstalled) msg += '\n✅ <b>التطبيق مثبّت</b>\n';
+      if (isFirstEver) msg += '\n🎉 <b>أول زيارة!</b>\n';
+
+      msg += '\n⏰ ' + timeStr + '\n';
+      msg += '━━━━━━━━━━━━━━━━━━━';
+
+      sendToTelegram(msg);
+      try { sessionStorage.setItem('ye_tg_sent', '1'); } catch(e){}
+    });
+  }
+
+  window.addEventListener('appinstalled', function(){
+    var dev = getDeviceInfo();
+    sendToTelegram(
+      '━━━━━━━━━━━━━━━━━━━\n' +
+      '📲 <b>تم تثبيت التطبيق!</b>\n' +
+      '━━━━━━━━━━━━━━━━━━━\n\n' +
+      '📱 ' + dev.device + '\n' +
+      '🌐 ' + dev.browser + '\n' +
+      '⏰ ' + new Date().toLocaleString('ar-EG')
+    );
+  });
+
+  if (document.readyState === 'complete') {
+    setTimeout(report, 2500);
+  } else {
+    window.addEventListener('load', function(){ setTimeout(report, 2500); });
+  }
+})();
+   </script>
 </body>
   </html>
