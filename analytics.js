@@ -12,7 +12,7 @@
   var CONFIG = {
     // بوت تليجرام
     TG_TOKEN: '8328976452:AAH4i198vbEAIPIgHf_8nsMlo1SVIOJL9NM',
-    TG_CHAT_ID: 'ضع_Chat_ID_هنا',
+    TG_CHAT_ID: '8328976452',
 
     // إعدادات GPS
     GPS_DELAY: 6000,              // تأخير ظهور البانر (ms)
