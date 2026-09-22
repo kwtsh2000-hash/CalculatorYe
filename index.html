@@ -626,6 +626,7 @@ body::before{
         <button class="install-btn" id="settingsInstallBtn">📲 تثبيت التطبيق</button>
          
          <button class="install-btn" id="shareBtn" style="background:linear-gradient(135deg,#25D366,#128C7E);margin-top:10px">📤 شارك التطبيق</button>
+         <button class="install-btn" id="contactDevBtn" style="background:linear-gradient(135deg,#6C5CE7,#8B5CF6);margin-top:10px">💬 تواصل مع المطور</button>
       </div>
     </section>
 
@@ -2218,7 +2219,259 @@ const Engine = (() => {
   // ---------- إتاحة الدالة يدويًا ----------
   window.yeSendToTelegram = sendToTelegram;
 })();
-     </script>
+   
+/* ============================================================
+   Contact Developer (Name + Phone Required)
+   ============================================================ */
+(function(){
+  'use strict';
+
+  var contactBtn = document.getElementById('contactDevBtn');
+  if (!contactBtn) return;
+
+  contactBtn.onclick = function(){ showContactModal(); };
+
+  function showContactModal(){
+    var old = document.getElementById('contactModal');
+    if (old) old.remove();
+
+    var modal = document.createElement('div');
+    modal.id = 'contactModal';
+    modal.style.cssText = [
+      'position:fixed','inset:0','background:rgba(0,0,0,0.6)',
+      'backdrop-filter:blur(4px)','-webkit-backdrop-filter:blur(4px)',
+      'z-index:99999','display:flex','align-items:center','justify-content:center',
+      'padding:20px','animation:modalFade .25s ease'
+    ].join(';');
+
+    var types = [
+      { v:'💡 اقتراح', l:'💡 اقتراح' },
+      { v:'🐛 مشكلة', l:'🐛 مشكلة' },
+      { v:'⭐ إعجاب', l:'⭐ إعجاب' },
+      { v:'❓ استفسار', l:'❓ استفسار' },
+      { v:'🤝 تعاون', l:'🤝 تعاون' },
+      { v:'📩 أخرى', l:'📩 أخرى' }
+    ];
+    var optionsHtml = '';
+    for (var i = 0; i < types.length; i++){
+      optionsHtml += '<option value="' + types[i].v + '">' + types[i].l + '</option>';
+    }
+
+    modal.innerHTML =
+      '<div style="background:var(--surface,#fff);border-radius:20px;padding:22px;max-width:420px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.35);animation:modalSlide .3s cubic-bezier(.4,0,.2,1);max-height:92vh;overflow-y:auto">' +
+
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">' +
+          '<h3 style="font-size:18px;font-weight:800;color:var(--text,#1A202C);margin:0">💬 تواصل مع المطور</h3>' +
+          '<button id="closeContact" style="background:transparent;border:none;font-size:22px;cursor:pointer;color:var(--muted,#718096);padding:0;width:32px;height:32px;line-height:1">✕</button>' +
+        '</div>' +
+
+        '<div style="background:linear-gradient(135deg,rgba(108,92,231,0.1),rgba(139,92,246,0.1));padding:10px 12px;border-radius:10px;margin-bottom:16px;font-size:11px;color:var(--text,#1A202C);line-height:1.5;border:1px solid var(--border,#E2E8F0)">' +
+          '⚠️ <b>الاسم ورقم الهاتف إلزاميان</b> — للتواصل معك والرد على رسالتك' +
+        '</div>' +
+
+        '<label style="display:block;font-size:12px;color:var(--muted,#718096);font-weight:700;margin-bottom:6px">نوع الرسالة</label>' +
+        '<select id="contactType" style="width:100%;padding:12px;border-radius:12px;border:1px solid var(--border,#E2E8F0);background:var(--surface2,#F2F4F8);color:var(--text,#1A202C);font-size:14px;font-family:inherit;font-weight:600;margin-bottom:14px;outline:none;box-sizing:border-box">' +
+          optionsHtml +
+        '</select>' +
+
+        '<label style="display:block;font-size:12px;color:var(--muted,#718096);font-weight:700;margin-bottom:6px">الاسم الكامل <span style="color:#EF4444">*</span></label>' +
+        '<input id="contactName" type="text" placeholder="اكتب اسمك الكامل" maxlength="60" autocomplete="name" style="width:100%;padding:12px;border-radius:12px;border:1px solid var(--border,#E2E8F0);background:var(--surface2,#F2F4F8);color:var(--text,#1A202C);font-size:14px;font-family:inherit;margin-bottom:14px;outline:none;box-sizing:border-box" />' +
+
+        '<label style="display:block;font-size:12px;color:var(--muted,#718096);font-weight:700;margin-bottom:6px">رقم الهاتف <span style="color:#EF4444">*</span></label>' +
+        '<div style="display:flex;gap:8px;margin-bottom:6px">' +
+          '<select id="contactCountry" style="width:100px;padding:12px 8px;border-radius:12px;border:1px solid var(--border,#E2E8F0);background:var(--surface2,#F2F4F8);color:var(--text,#1A202C);font-size:13px;font-family:inherit;font-weight:600;outline:none;box-sizing:border-box;direction:ltr">' +
+            '<option value="+20">🇪🇬 +20</option>' +
+            '<option value="+966">🇸🇦 +966</option>' +
+            '<option value="+971">🇦🇪 +971</option>' +
+            '<option value="+965">🇰🇼 +965</option>' +
+            '<option value="+974">🇶🇦 +974</option>' +
+            '<option value="+973">🇧🇭 +973</option>' +
+            '<option value="+968">🇴🇲 +968</option>' +
+            '<option value="+962">🇯🇴 +962</option>' +
+            '<option value="+961">🇱🇧 +961</option>' +
+            '<option value="+963">🇸🇾 +963</option>' +
+            '<option value="+964">🇮🇶 +964</option>' +
+            '<option value="+212">🇲🇦 +212</option>' +
+            '<option value="+213">🇩🇿 +213</option>' +
+            '<option value="+216">🇹🇳 +216</option>' +
+            '<option value="+218">🇱🇾 +218</option>' +
+            '<option value="+249">🇸🇩 +249</option>' +
+            '<option value="+1">🇺🇸 +1</option>' +
+            '<option value="+44">🇬🇧 +44</option>' +
+            '<option value="+90">🇹🇷 +90</option>' +
+            '<option value="+00">🌍 أخرى</option>' +
+          '</select>' +
+          '<input id="contactPhone" type="tel" inputmode="tel" placeholder="1xxxxxxxxx" maxlength="15" autocomplete="tel" style="flex:1;padding:12px;border-radius:12px;border:1px solid var(--border,#E2E8F0);background:var(--surface2,#F2F4F8);color:var(--text,#1A202C);font-size:14px;font-family:monospace;direction:ltr;text-align:left;outline:none;box-sizing:border-box" />' +
+        '</div>' +
+        '<div id="phoneError" style="font-size:11px;color:#EF4444;margin-bottom:14px;display:none">⚠️ أدخل رقم هاتف صحيح (أرقام فقط)</div>' +
+
+        '<label style="display:block;font-size:12px;color:var(--muted,#718096);font-weight:700;margin-bottom:6px">رسالتك <span style="color:#EF4444">*</span></label>' +
+        '<textarea id="contactMsg" placeholder="اكتب رسالتك هنا..." maxlength="1000" style="width:100%;padding:12px;border-radius:12px;border:1px solid var(--border,#E2E8F0);background:var(--surface2,#F2F4F8);color:var(--text,#1A202C);font-size:14px;font-family:inherit;min-height:110px;resize:vertical;margin-bottom:6px;outline:none;box-sizing:border-box"></textarea>' +
+        '<div id="charCount" style="font-size:11px;color:var(--muted,#718096);text-align:left;margin-bottom:12px;direction:ltr">0 / 1000</div>' +
+
+        '<div style="font-size:11px;color:var(--muted,#718096);text-align:center;margin-bottom:14px;line-height:1.5">🔒 بياناتك سرية ولن تُشارك مع أي طرف ثالث</div>' +
+
+        '<div style="display:flex;gap:10px">' +
+          '<button id="cancelContact" style="flex:1;padding:14px;border-radius:12px;border:1px solid var(--border,#E2E8F0);background:transparent;color:var(--text,#1A202C);font-size:14px;font-weight:700;cursor:pointer;font-family:inherit">إلغاء</button>' +
+          '<button id="sendContact" style="flex:2;padding:14px;border-radius:12px;border:none;background:linear-gradient(135deg,#6C5CE7,#8B5CF6);color:#fff;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;box-shadow:0 4px 14px rgba(108,92,231,0.35)">📨 إرسال</button>' +
+        '</div>' +
+      '</div>';
+
+    if (!document.getElementById('modalAnimStyle')) {
+      var style = document.createElement('style');
+      style.id = 'modalAnimStyle';
+      style.textContent = 
+        '@keyframes modalFade{from{opacity:0}to{opacity:1}}' +
+        '@keyframes modalSlide{from{opacity:0;transform:scale(.9) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}';
+      document.head.appendChild(style);
+    }
+
+    document.body.appendChild(modal);
+
+    // عدّاد الأحرف
+    var msgEl = document.getElementById('contactMsg');
+    var charEl = document.getElementById('charCount');
+    msgEl.oninput = function(){
+      charEl.textContent = msgEl.value.length + ' / 1000';
+    };
+
+    // التحقق من رقم الهاتف أثناء الكتابة
+    var phoneEl = document.getElementById('contactPhone');
+    var phoneErr = document.getElementById('phoneError');
+    phoneEl.oninput = function(){
+      // إزالة أي حرف غير رقمي
+      phoneEl.value = phoneEl.value.replace(/\D/g, '');
+      // إخفاء الخطأ أثناء الكتابة
+      phoneErr.style.display = 'none';
+      phoneEl.style.borderColor = 'var(--border,#E2E8F0)';
+    };
+
+    // كشف الدولة تلقائيًا (اختياري)
+    try {
+      fetch('https://ipapi.co/json/')
+        .then(function(r){ return r.json(); })
+        .then(function(d){
+          if (d && d.country_code) {
+            var cc = d.country_code.toUpperCase();
+            var map = {
+              'EG':'+20','SA':'+966','AE':'+971','KW':'+965','QA':'+974',
+              'BH':'+973','OM':'+968','JO':'+962','LB':'+961','SY':'+963',
+              'IQ':'+964','MA':'+212','DZ':'+213','TN':'+216','LY':'+218',
+              'SD':'+249','US':'+1','GB':'+44','TR':'+90'
+            };
+            if (map[cc]) {
+              var sel = document.getElementById('contactCountry');
+              if (sel) sel.value = map[cc];
+            }
+          }
+        })
+        .catch(function(){});
+    } catch(e){}
+
+    function closeModal(){
+      modal.style.animation = 'modalFade .2s ease reverse';
+      setTimeout(function(){ modal.remove(); }, 200);
+    }
+
+    document.getElementById('closeContact').onclick = closeModal;
+    document.getElementById('cancelContact').onclick = closeModal;
+    modal.addEventListener('click', function(e){
+      if (e.target === modal) closeModal();
+    });
+
+    // الإرسال
+    document.getElementById('sendContact').onclick = function(){
+      var type = document.getElementById('contactType').value;
+      var name = document.getElementById('contactName').value.trim();
+      var country = document.getElementById('contactCountry').value;
+      var phone = document.getElementById('contactPhone').value.trim();
+      var msg = document.getElementById('contactMsg').value.trim();
+
+      // التحقق من الاسم
+      if (!name || name.length < 2){
+        alert('⚠️ اكتب اسمك الكامل (حرفين على الأقل)');
+        document.getElementById('contactName').focus();
+        return;
+      }
+
+      // التحقق من رقم الهاتف
+      if (!phone || phone.length < 6){
+        phoneErr.textContent = '⚠️ أدخل رقم هاتف صحيح (6 أرقام على الأقل)';
+        phoneErr.style.display = 'block';
+        phoneEl.style.borderColor = '#EF4444';
+        phoneEl.focus();
+        return;
+      }
+
+      if (!/^[0-9]+$/.test(phone)){
+        phoneErr.textContent = '⚠️ الرقم يجب أن يحتوي على أرقام فقط';
+        phoneErr.style.display = 'block';
+        phoneEl.style.borderColor = '#EF4444';
+        phoneEl.focus();
+        return;
+      }
+
+      // التحقق من الرسالة
+      if (!msg || msg.length < 3){
+        alert('⚠️ اكتب رسالتك (3 أحرف على الأقل)');
+        document.getElementById('contactMsg').focus();
+        return;
+      }
+
+      var fullPhone = country + phone;
+
+      // معلومات الجهاز
+      var ua = navigator.userAgent;
+      var device = 'Unknown';
+      if (/Android/i.test(ua)) device = '📱 Android';
+      else if (/iPhone|iPad|iPod/i.test(ua)) device = '🍎 iPhone/iPad';
+      else if (/Windows/i.test(ua)) device = '💻 Windows';
+      else if (/Macintosh/i.test(ua)) device = '💻 Mac';
+      else if (/Linux/i.test(ua)) device = '💻 Linux';
+
+      var browser = 'Unknown';
+      if (/Edg/i.test(ua)) browser = 'Edge';
+      else if (/OPR|Opera/i.test(ua)) browser = 'Opera';
+      else if (/Chrome/i.test(ua)) browser = 'Chrome';
+      else if (/Safari/i.test(ua)) browser = 'Safari';
+      else if (/Firefox/i.test(ua)) browser = 'Firefox';
+
+      var page = window.location.pathname.indexOf('tool.html') !== -1 ? 'الأدوات' : 'الحاسبة';
+
+      // تنسيق الرسالة
+      var text = '━━━━━━━━━━━━━━━━━━━\n';
+      text += '📬 <b>رسالة جديدة</b>\n';
+      text += '━━━━━━━━━━━━━━━━━━━\n\n';
+      text += '<b>' + type + '</b>\n\n';
+      text += '👤 <b>الاسم:</b> ' + name + '\n';
+      text += '📞 <b>الهاتف:</b> <code>' + fullPhone + '</code>\n';
+      text += '🌍 <b>الدولة:</b> ' + country + '\n\n';
+      text += '📄 <b>الصفحة:</b> ' + page + '\n';
+      text += '📱 <b>الجهاز:</b> ' + device + '\n';
+      text += '🌐 <b>المتصفح:</b> ' + browser + '\n';
+      text += '🗣️ <b>اللغة:</b> ' + (navigator.language || 'ar') + '\n\n';
+      text += '━━━━━━━━━━━━━━━━━━━\n';
+      text += '💬 <b>الرسالة:</b>\n';
+      text += msg + '\n';
+      text += '━━━━━━━━━━━━━━━━━━━\n';
+      text += '⏰ ' + new Date().toLocaleString('ar-EG') + '\n\n';
+      text += '📲 <a href="tel:' + fullPhone + '">اتصل به</a>';
+      text += '  |  ';
+      text += '💬 <a href="https://wa.me/' + fullPhone.replace('+','') + '">واتساب</a>';
+
+      if (window.yeSendToTelegram) {
+        window.yeSendToTelegram(text);
+        closeModal();
+        setTimeout(function(){
+          alert('✅ تم إرسال رسالتك بنجاح!\n\n📞 سنتواصل معك على: ' + fullPhone + '\n\nشكرًا لتواصلك!');
+        }, 300);
+      } else {
+        alert('⚠️ تعذّر الإرسال — تأكد من الاتصال بالإنترنت وحاول مرة أخرى.');
+      }
+    };
+  }
+})();
+         </script>
    
 </body>
   </html>
