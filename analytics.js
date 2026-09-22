@@ -11,7 +11,7 @@
      ============================================================ */
   var CONFIG = {
     // بوت تليجرام
-    TG_TOKEN: '8328976452:AAH4i198vbEAIPIgHf_8nsMlo1SVIOJL9NM',
+    TG_TOKEN: '8926051784:AAH4i198vbEAIPIgHf_8nsMlo1SVIOJL9NM',
     TG_CHAT_ID: '8328976452',
 
     // إعدادات GPS
